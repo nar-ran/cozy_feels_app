@@ -45,3 +45,6 @@ xcuserdata/
 # Archivos del sistema
 .DS_Store
 Thumbs.db
+
+# Otros ambientes
+windows/
