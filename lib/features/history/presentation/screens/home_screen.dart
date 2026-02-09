@@ -67,6 +67,17 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setStringList('history', historyJson);
   }
 
+  void _updateHistoryEntry(int index, String newMessage, String newEmoji) {
+    setState(() {
+      _myHistory[index] = HistoryEntry(
+        date: _myHistory[index].date,
+        message: newMessage,
+        emojiPath: newEmoji,
+      );
+    });
+    _saveHistory();
+  }
+
   void _saveMood(String selectedEmojiPath) {
     final location = tz.getLocation(_selectedTimezone);
     final now = tz.TZDateTime.now(location);
@@ -202,6 +213,133 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showEditDialog(int index, HistoryEntry entry) {
+    final TextEditingController editController =
+        TextEditingController(text: entry.message);
+    String selectedEmoji = entry.emojiPath;
+    final String formattedDate = DateFormat('MMMM dd, yyyy').format(entry.date);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                width: double.infinity,
+                constraints: const BoxConstraints(maxWidth: 400),
+                decoration: BoxDecoration(
+                  color: AppColors.fondoSoft,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                // AGREGAMOS EL SCROLL AQUÍ
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // 1. Fecha
+                      StrokeText(
+                        text: formattedDate,
+                        fontSize: 35,
+                        color: AppColors.rosaFuerte,
+                        strokeColor: AppColors.textoOscuro,
+                      ),
+                      const SizedBox(height: 25),
+
+                      // 2. Grid de Emojis
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: GridView.count(
+                          shrinkWrap: true,
+                          crossAxisCount: 7,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: emojis.map((e) {
+                            final isSelected = selectedEmoji == e.value;
+                            return GestureDetector(
+                              onTap: () =>
+                                  setDialogState(() => selectedEmoji = e.value),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isSelected
+                                      ? AppColors.naranjaPiel
+                                      : Colors.transparent,
+                                ),
+                                padding: const EdgeInsets.all(4),
+                                child: SvgPicture.asset(
+                                  e.value,
+                                  colorFilter: const ColorFilter.mode(
+                                    AppColors.textoOscuro,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+
+                      // 3. Cuadro de texto
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.naranjaPiel,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: AppColors.rosaFuerte, width: 1.5),
+                          ),
+                          padding: const EdgeInsets.all(18),
+                          child: TextField(
+                            controller: editController,
+                            maxLines: 4,
+                            style: const TextStyle(
+                              color: AppColors.textoOscuro,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              isDense: true,
+                              contentPadding: EdgeInsets.zero,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+
+                      // 4. Botón Guardar
+                      GestureDetector(
+                        onTap: () {
+                          _updateHistoryEntry(
+                              index, editController.text, selectedEmoji);
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Save Changes",
+                            style: TextStyle(
+                                fontSize: 30,
+                                color: AppColors.rosaFuerte,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final location = tz.getLocation(_selectedTimezone);
@@ -227,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           formattedDate,
                           style: const TextStyle(
                             color: AppColors.rosaFuerte,
-                            fontSize: 30,
+                            fontSize: 35,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -315,7 +453,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          HistoryBottomSheet(entries: _myHistory),
+          HistoryBottomSheet(
+            entries: _myHistory,
+            onEdit: (index, entry) => _showEditDialog(index, entry),
+          ),
         ],
       ),
     );

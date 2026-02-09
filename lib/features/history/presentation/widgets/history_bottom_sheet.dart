@@ -7,12 +7,18 @@ import '../../domain/entities/history_entry.dart';
 
 class HistoryBottomSheet extends StatelessWidget {
   final List<HistoryEntry> entries;
+  final Function(int index, HistoryEntry entry) onEdit;
 
-  const HistoryBottomSheet({super.key, required this.entries});
+  const HistoryBottomSheet({
+    super.key,
+    required this.entries,
+    required this.onEdit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final double emojiSize = ((MediaQuery.of(context).size.width - 130) / 7) - 8;
+    final double emojiSize =
+        ((MediaQuery.of(context).size.width - 130) / 7) - 8;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.3,
@@ -27,7 +33,6 @@ class HistoryBottomSheet extends StatelessWidget {
           child: CustomScrollView(
             controller: scrollController,
             slivers: [
-              // 1. Zona roja (Barrita + Título)
               SliverToBoxAdapter(
                 child: Column(
                   children: [
@@ -52,8 +57,6 @@ class HistoryBottomSheet extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // 2. Estado vacío o Lista
               if (entries.isEmpty)
                 const SliverFillRemaining(
                   hasScrollBody: false,
@@ -77,59 +80,68 @@ class HistoryBottomSheet extends StatelessWidget {
                         final formattedDate =
                             DateFormat('MMMM dd, yyyy').format(entry.date);
 
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
+                        return GestureDetector(
+                          onTap: () => onEdit(index, entry),
+                          child: Container(
+                            color: Colors.transparent,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SvgPicture.asset(
-                                  entry.emojiPath,
-                                  width: emojiSize,
-                                  height: emojiSize,
-                                  colorFilter: const ColorFilter.mode(
-                                      AppColors.textoOscuro, BlendMode.srcIn),
+                                Column(
+                                  children: [
+                                    SvgPicture.asset(
+                                      entry.emojiPath,
+                                      width: emojiSize,
+                                      height: emojiSize,
+                                      colorFilter: const ColorFilter.mode(
+                                          AppColors.textoOscuro,
+                                          BlendMode.srcIn),
+                                    ),
+                                    if (index != entries.length - 1)
+                                      Container(
+                                        width: 2,
+                                        height: 50,
+                                        color: AppColors.textoOscuro
+                                            .withOpacity(0.5),
+                                      ),
+                                  ],
                                 ),
-                                if (index != entries.length - 1)
-                                  Container(
-                                    width: 2,
-                                    height: 50,
-                                    color:
-                                        AppColors.textoOscuro.withOpacity(0.5),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        formattedDate,
+                                        style: const TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.textoOscuro,
+                                            height: 1.0),
+                                      ),
+                                      Text(
+                                        entry.message,
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            color: AppColors.textoOscuro
+                                                .withOpacity(0.7),
+                                            height: 1.0),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
                                   ),
+                                ),
                               ],
                             ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    formattedDate,
-                                    style: const TextStyle(
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.textoOscuro,
-                                        height: 1.0),
-                                  ),
-                                  Text(
-                                    entry.message,
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        color: AppColors.textoOscuro
-                                            .withOpacity(0.7),
-                                        height: 1.0),
-                                  ),
-                                  const SizedBox(height: 20),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         );
                       },
                       childCount: entries.length,
                     ),
                   ),
                 ),
+              const SliverToBoxAdapter(child: SizedBox(height: 50)),
             ],
           ),
         );
