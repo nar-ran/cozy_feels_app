@@ -120,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) {
+        final width = MediaQuery.of(context).size.width;
         return Dialog(
           backgroundColor: AppColors.fondoSoft,
           shape:
@@ -135,9 +136,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const StrokeText(
+                StrokeText(
                   text: 'Select Zone',
-                  fontSize: 35,
+                  fontSize: width * 0.08,
                   color: AppColors.rosaFuerte,
                   strokeColor: AppColors.textoOscuro,
                 ),
@@ -177,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Text(
                                     entry.key,
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: width * 0.04,
                                       fontWeight: isSelected
                                           ? FontWeight.bold
                                           : FontWeight.normal,
@@ -190,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Text(
                                   timeString,
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: width * 0.035,
                                     color: isSelected
                                         ? Colors.white70
                                         : AppColors.textoOscuro
@@ -224,6 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
+            final width = MediaQuery.of(context).size.width;
             return Dialog(
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -245,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // 1. Fecha
                       StrokeText(
                         text: formattedDate,
-                        fontSize: 35,
+                        fontSize: width * 0.08,
                         color: AppColors.rosaFuerte,
                         strokeColor: AppColors.textoOscuro,
                       ),
@@ -272,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ? AppColors.naranjaPiel
                                       : Colors.transparent,
                                 ),
-                                padding: const EdgeInsets.all(4),
+                                padding: EdgeInsets.all(width * 0.01),
                                 child: SvgPicture.asset(
                                   e.value,
                                   colorFilter: const ColorFilter.mode(
@@ -301,9 +303,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: TextField(
                             controller: editController,
                             maxLines: 4,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textoOscuro,
-                              fontSize: 25,
+                              fontSize: width * 0.06,
                               fontWeight: FontWeight.w500,
                             ),
                             decoration: const InputDecoration(
@@ -323,9 +325,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               index, editController.text, selectedEmoji);
                           Navigator.pop(context);
                         },
-                        child: const Text("Save Changes",
+                        child: Text("Save Changes",
                             style: TextStyle(
-                                fontSize: 30,
+                                fontSize: width * 0.07,
                                 color: AppColors.rosaFuerte,
                                 fontWeight: FontWeight.bold)),
                       ),
@@ -345,6 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final location = tz.getLocation(_selectedTimezone);
     final now = tz.TZDateTime.now(location);
     final String formattedDate = DateFormat('EEEE, MMM d').format(now);
+    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: AppColors.fondoSoft,
@@ -363,9 +366,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         cursor: SystemMouseCursors.click,
                         child: Text(
                           formattedDate,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.rosaFuerte,
-                            fontSize: 35,
+                            fontSize: width * 0.09,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -379,10 +382,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: [
                         const SizedBox(height: 40),
-                        const Text('How do you feel today?',
+                        Text('How do you feel today?',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 60,
+                                fontSize: width * 0.15,
                                 color: AppColors.textoOscuro,
                                 height: 0.8)),
                         const SizedBox(height: 30),
@@ -416,9 +419,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        const StrokeText(
+                        StrokeText(
                             text: 'You prefer no words?',
-                            fontSize: 50,
+                            fontSize: width * 0.12,
                             color: AppColors.rosaFuerte,
                             strokeColor: AppColors.textoOscuro),
                         Expanded(
@@ -435,7 +438,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               return GestureDetector(
                                 onTap: () => _saveMood(emoji.value),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
+                                  padding: EdgeInsets.all(width * 0.01),
                                   child: SvgPicture.asset(
                                     emoji.value,
                                     colorFilter: const ColorFilter.mode(

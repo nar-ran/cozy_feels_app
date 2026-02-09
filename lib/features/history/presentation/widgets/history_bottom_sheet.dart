@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
 import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
 import 'package:intl/intl.dart';
-import '../../domain/entities/history_entry.dart';
+import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
 
 class HistoryBottomSheet extends StatelessWidget {
   final List<HistoryEntry> entries;
@@ -17,8 +17,8 @@ class HistoryBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double emojiSize =
-        ((MediaQuery.of(context).size.width - 130) / 7) - 8;
+    final width = MediaQuery.of(context).size.width;
+    final double emojiSize = width * 0.1;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.3,
@@ -45,11 +45,11 @@ class HistoryBottomSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
                       child: StrokeText(
                         text: 'History',
-                        fontSize: 45,
+                        fontSize: width * 0.12,
                         color: AppColors.rosaFuerte,
                         strokeColor: AppColors.textoOscuro,
                       ),
@@ -58,7 +58,7 @@ class HistoryBottomSheet extends StatelessWidget {
                 ),
               ),
               if (entries.isEmpty)
-                const SliverFillRemaining(
+                SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(
                     child: Text(
@@ -66,7 +66,7 @@ class HistoryBottomSheet extends StatelessWidget {
                       style: TextStyle(
                           color: AppColors.textoOscuro,
                           fontFamily: 'Dongle',
-                          fontSize: 24),
+                          fontSize: width * 0.06),
                     ),
                   ),
                 )
@@ -114,8 +114,8 @@ class HistoryBottomSheet extends StatelessWidget {
                                     children: [
                                       Text(
                                         formattedDate,
-                                        style: const TextStyle(
-                                            fontSize: 28,
+                                        style: TextStyle(
+                                            fontSize: width * 0.07,
                                             fontWeight: FontWeight.bold,
                                             color: AppColors.textoOscuro,
                                             height: 1.0),
@@ -123,7 +123,7 @@ class HistoryBottomSheet extends StatelessWidget {
                                       Text(
                                         entry.message,
                                         style: TextStyle(
-                                            fontSize: 22,
+                                            fontSize: width * 0.055,
                                             color: AppColors.textoOscuro
                                                 .withOpacity(0.7),
                                             height: 1.0),

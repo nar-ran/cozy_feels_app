@@ -11,6 +11,8 @@ dependencies:
   intl: ^0.20.2
   shared_preferences: ^2.5.3
   timezone: ^0.10.1
+  flutter_launcher_icons: ^0.14.3
+  rename_app: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +32,7 @@ flutter:
           weight: 400
         - asset: assets/fonts/Dongle/Dongle-Bold.ttf
           weight: 700
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  image_path: "assets/icons/app_icon.png"
