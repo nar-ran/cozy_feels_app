@@ -42,12 +42,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadHistory() async {
     final prefs = await SharedPreferences.getInstance();
     final historyJson = prefs.getStringList('history');
-    if (historyJson != null) {
-      setState(() {
+    final savedTimezone = prefs.getString('selected_timezone');
+
+    setState(() {
+      if (historyJson != null) {
         _myHistory.addAll(
             historyJson.map((json) => HistoryEntry.fromJson(jsonDecode(json))));
-      });
-    }
+      }
+      if (savedTimezone != null) {
+        _selectedTimezone = savedTimezone;
+      }
+    });
+  }
+
+  Future<void> _saveTimezone(String timezone) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selected_timezone', timezone);
   }
 
   Future<void> _saveHistory() async {
@@ -58,11 +68,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _saveMood(String selectedEmojiPath) {
+    final location = tz.getLocation(_selectedTimezone);
+    final now = tz.TZDateTime.now(location);
+
+    bool alreadyExists = _myHistory.any((entry) {
+      final entryDate = tz.TZDateTime.from(entry.date, location);
+      return entryDate.year == now.year &&
+          entryDate.month == now.month &&
+          entryDate.day == now.day;
+    });
+
+    if (alreadyExists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text("You've already recorded your mood for today!"),
+          backgroundColor: AppColors.rosaFuerte,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _myHistory.insert(
           0,
           HistoryEntry(
-            date: tz.TZDateTime.now(tz.getLocation(_selectedTimezone)),
+            date: now,
             message: _textController.text,
             emojiPath: selectedEmojiPath,
           ));
@@ -111,6 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         return GestureDetector(
                           onTap: () {
                             setState(() => _selectedTimezone = entry.value);
+                            _saveTimezone(entry.value);
                             Navigator.pop(context);
                           },
                           child: Container(
@@ -156,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         );
-                      }).toList(), 
+                      }).toList(),
                     ),
                   ),
                 ),
@@ -216,8 +250,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 30),
                         TextField(
                           controller: _textController,
+                          style: const TextStyle(
+                            color: AppColors.textoOscuro,
+                            fontWeight: FontWeight.w500,
+                          ),
                           decoration: InputDecoration(
                             hintText: "Let it be all out...",
+                            hintStyle: TextStyle(
+                              color: AppColors.rosaFuerte.withOpacity(0.8),
+                            ),
                             filled: true,
                             fillColor: AppColors.naranjaPiel,
                             border: OutlineInputBorder(
@@ -228,6 +269,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(50),
                                 borderSide: const BorderSide(
                                     color: AppColors.rosaFuerte, width: 2)),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50),
+                              borderSide: BorderSide(
+                                  color: AppColors.rosaFuerte.withOpacity(0.5),
+                                  width: 2),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 30),

@@ -12,6 +12,8 @@ class HistoryBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double emojiSize = ((MediaQuery.of(context).size.width - 130) / 7) - 8;
+
     return DraggableScrollableSheet(
       initialChildSize: 0.3,
       minChildSize: 0.15,
@@ -22,76 +24,112 @@ class HistoryBottomSheet extends StatelessWidget {
             color: AppColors.naranjaPiel,
             borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
           ),
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-              Container(
-                  width: 50,
-                  height: 5,
-                  decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.circular(10))
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: StrokeText(text: 'History', fontSize: 45, color: AppColors.rosaFuerte, strokeColor: AppColors.textoOscuro),
-              ),
-              Expanded(
-                child: entries.isEmpty
-                    ? const Center(child: Text("No entries yet...", style: TextStyle(fontFamily: 'Dongle', fontSize: 24)))
-                    : ListView.builder(
-                  controller: scrollController,
-                  itemCount: entries.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  itemBuilder: (context, index) {
-                    final entry = entries[index];
-                    final formattedDate = DateFormat('MMMM dd, yyyy').format(entry.date);
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Columna del Timeline (Icono + Línea)
-                        Column(
-                          children: [
-                            // CORRECCIÓN: Usamos SvgPicture en lugar de Icon
-                            SvgPicture.asset(
-                              entry.emojiPath,
-                              width: 35,
-                              height: 35,
-                              colorFilter: const ColorFilter.mode(AppColors.textoOscuro, BlendMode.srcIn),
-                            ),
-                            if (index != entries.length - 1)
-                              Container(
-                                  width: 2,
-                                  height: 50,
-                                  color: AppColors.textoOscuro.withOpacity(0.5)
-                              ),
-                          ],
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  formattedDate,
-                                  style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.textoOscuro.withOpacity(0.7),
-                                      height: 1.0
-                                  )
-                              ),
-                              Text(
-                                  entry.message,
-                                  style: const TextStyle(fontSize: 22, color: AppColors.textoOscuro, height: 1.0)
-                              ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              // 1. Zona roja (Barrita + Título)
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    Container(
+                      width: 100,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: AppColors.fondoSoft,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: StrokeText(
+                        text: 'History',
+                        fontSize: 45,
+                        color: AppColors.rosaFuerte,
+                        strokeColor: AppColors.textoOscuro,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
+              // 2. Estado vacío o Lista
+              if (entries.isEmpty)
+                const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: Text(
+                      "No entries yet...",
+                      style: TextStyle(
+                          color: AppColors.textoOscuro,
+                          fontFamily: 'Dongle',
+                          fontSize: 24),
+                    ),
+                  ),
+                )
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final entry = entries[index];
+                        final formattedDate =
+                            DateFormat('MMMM dd, yyyy').format(entry.date);
+
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                SvgPicture.asset(
+                                  entry.emojiPath,
+                                  width: emojiSize,
+                                  height: emojiSize,
+                                  colorFilter: const ColorFilter.mode(
+                                      AppColors.textoOscuro, BlendMode.srcIn),
+                                ),
+                                if (index != entries.length - 1)
+                                  Container(
+                                    width: 2,
+                                    height: 50,
+                                    color:
+                                        AppColors.textoOscuro.withOpacity(0.5),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    formattedDate,
+                                    style: const TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.textoOscuro,
+                                        height: 1.0),
+                                  ),
+                                  Text(
+                                    entry.message,
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        color: AppColors.textoOscuro
+                                            .withOpacity(0.7),
+                                        height: 1.0),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      childCount: entries.length,
+                    ),
+                  ),
+                ),
             ],
           ),
         );
