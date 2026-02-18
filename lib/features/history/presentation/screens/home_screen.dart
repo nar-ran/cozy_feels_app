@@ -237,7 +237,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: AppColors.fondoSoft,
                   borderRadius: BorderRadius.circular(25),
                 ),
-                // AGREGAMOS EL SCROLL AQUÍ
                 child: SingleChildScrollView(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 30),

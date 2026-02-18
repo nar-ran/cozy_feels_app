@@ -23,7 +23,6 @@ class TimelineTile extends StatelessWidget {
         children: [
           Column(
             children: [
-              // Cambia Icon por SvgPicture.asset si usas SVGs reales
               const Icon(Icons.sentiment_satisfied, color: AppColors.textoOscuro, size: 30),
               if (!isLast)
                 Expanded(
