@@ -38,5 +38,5 @@ The project is constantly evolving. These are the features currently in developm
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/your-username/cozy-feelings.git](https://github.com/your-username/cozy-feelings.git)
-   cd cozy-feelings
+   git clone https://github.com/nar-ran/cozy_feels_app.git
+   cd cozy_feels_app
