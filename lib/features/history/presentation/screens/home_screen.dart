@@ -457,6 +457,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           HistoryBottomSheet(
             entries: _myHistory,
+            selectedTimezone: _selectedTimezone,
             onEdit: (index, entry) => _showEditDialog(index, entry),
           ),
         ],

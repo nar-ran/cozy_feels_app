@@ -4,14 +4,17 @@ import 'package:cozy_feels_app/core/theme/app_colors.dart';
 import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
 import 'package:intl/intl.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class HistoryBottomSheet extends StatelessWidget {
   final List<HistoryEntry> entries;
+  final String selectedTimezone;
   final Function(int index, HistoryEntry entry) onEdit;
 
   const HistoryBottomSheet({
     super.key,
     required this.entries,
+    required this.selectedTimezone,
     required this.onEdit,
   });
 
@@ -77,15 +80,20 @@ class HistoryBottomSheet extends StatelessWidget {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final entry = entries[index];
+
+                        // --- ZONA HORARIA ---
+                        final location = tz.getLocation(selectedTimezone);
+                        final dateInZone =
+                            tz.TZDateTime.from(entry.date, location);
                         final formattedDate =
-                            DateFormat('MMMM dd, yyyy').format(entry.date);
+                            DateFormat('MMMM dd, yyyy').format(dateInZone);
 
                         return GestureDetector(
                           onTap: () => onEdit(index, entry),
-                          child: Container(
-                            color: Colors.transparent,
+                          child: IntrinsicHeight(
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment
+                                  .stretch,
                               children: [
                                 Column(
                                   children: [
@@ -98,38 +106,44 @@ class HistoryBottomSheet extends StatelessWidget {
                                           BlendMode.srcIn),
                                     ),
                                     if (index != entries.length - 1)
-                                      Container(
-                                        width: 2,
-                                        height: 50,
-                                        color: AppColors.textoOscuro
-                                            .withOpacity(0.5),
+                                      Expanded(
+                                        child: Container(
+                                          width: 2,
+                                          color: AppColors.textoOscuro
+                                              .withOpacity(0.5),
+                                        ),
                                       ),
                                   ],
                                 ),
                                 const SizedBox(width: 20),
                                 Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        formattedDate,
-                                        style: TextStyle(
-                                            fontSize: width * 0.07,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.textoOscuro,
-                                            height: 1.0),
-                                      ),
-                                      Text(
-                                        entry.message,
-                                        style: TextStyle(
-                                            fontSize: width * 0.055,
-                                            color: AppColors.textoOscuro
-                                                .withOpacity(0.7),
-                                            height: 1.0),
-                                      ),
-                                      const SizedBox(height: 20),
-                                    ],
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 25),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          formattedDate,
+                                          style: TextStyle(
+                                              fontSize: width * 0.07,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.textoOscuro,
+                                              height:
+                                                  1.2),
+                                        ),
+                                        Text(
+                                          entry.message.isEmpty
+                                              ? "No words today..."
+                                              : entry.message,
+                                          style: TextStyle(
+                                              fontSize: width * 0.055,
+                                              color: AppColors.textoOscuro
+                                                  .withOpacity(0.7),
+                                              height: 1.1),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
