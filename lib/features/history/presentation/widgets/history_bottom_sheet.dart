@@ -81,6 +81,15 @@ class HistoryBottomSheet extends StatelessWidget {
                       (context, index) {
                         final entry = entries[index];
 
+                        String getFixedPath(String originalPath) {
+                          if (originalPath.contains('/feelings/')) {
+                            return originalPath;
+                          }
+
+                          return originalPath.replaceAll('assets/icons/svg/',
+                              'assets/icons/svg/feelings/');
+                        }
+
                         // --- ZONA HORARIA ---
                         final location = tz.getLocation(selectedTimezone);
                         final dateInZone =
@@ -98,7 +107,7 @@ class HistoryBottomSheet extends StatelessWidget {
                                 Column(
                                   children: [
                                     SvgPicture.asset(
-                                      entry.emojiPath,
+                                      getFixedPath(entry.emojiPath),
                                       width: emojiSize,
                                       height: emojiSize,
                                       colorFilter: const ColorFilter.mode(

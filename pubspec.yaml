@@ -23,6 +23,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/svg/
+    - assets/icons/svg/features/
+    - assets/icons/svg/feelings/
   fonts:
     - family: Dongle
       fonts:
