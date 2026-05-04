@@ -1,6 +1,6 @@
 name: cozy_feels_app
 description: "A new Flutter project."
-version: 1.0.0+3
+version: 1.0.0+5
 environment:
   sdk: ^3.5.4
 
