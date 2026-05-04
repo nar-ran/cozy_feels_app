@@ -20,6 +20,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _showOnboarding = false;
+  int _onboardingStepIndex = 1;
+
   final TextEditingController _textController = TextEditingController();
   final List<HistoryEntry> _myHistory = [];
   final emojis = AppAssets.sentimentEmojis.entries.toList();
@@ -37,6 +40,27 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     tz.initializeTimeZones();
     _loadHistory();
+    _checkOnboarding();
+  }
+
+  Future<void> _checkOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Si la llave 'seen_onboarding' no existe, es la primera vez
+    final bool? seenOnboarding = prefs.getBool('seen_onboarding');
+
+    if (seenOnboarding == null || seenOnboarding == false) {
+      setState(() {
+        _showOnboarding = true;
+      });
+    }
+  }
+
+  Future<void> _closeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('seen_onboarding', true);
+    setState(() {
+      _showOnboarding = false;
+    });
   }
 
   Future<void> _loadHistory() async {
@@ -341,6 +365,102 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildOnboarding() {
+    final width = MediaQuery.of(context).size.width;
+
+    return Container(
+      color: AppColors.fondoSoft.withOpacity(0.89),
+      width: double.infinity,
+      height: double.infinity,
+      child: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            StrokeText(
+              text: 'Guide $_onboardingStepIndex/3',
+              fontSize: width * 0.08,
+              color: AppColors.rosaFuerte,
+              strokeColor: AppColors.textoOscuro,
+            ),
+            const SizedBox(height: 40),
+
+            if (_onboardingStepIndex == 1) ...[
+              _onboardingStep(
+                  "Write (optional) and TAP AN EMOJI to save your day.",
+                  Icons.auto_awesome,
+                  width),
+            ] else if (_onboardingStepIndex == 2) ...[
+              _onboardingStep(
+                  "Slide up the history and TAP ANY ENTRY to edit or delete it.",
+                  Icons.history_edu,
+                  width),
+            ] else if (_onboardingStepIndex == 3) ...[
+              _onboardingStep(
+                  "TAP THE DATE at the top to change your Timezone.",
+                  Icons.language,
+                  width),
+            ],
+
+            const SizedBox(height: 60),
+
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (_onboardingStepIndex < 3) {
+                    _onboardingStepIndex++;
+                  } else {
+                    _closeOnboarding();
+                  }
+                });
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                decoration: BoxDecoration(
+                  color: AppColors.rosaFuerte.withOpacity(0.60),
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(
+                      color: AppColors.textoOscuro.withOpacity(0.3),
+                      width: 1.5),
+                ),
+                child: Text(
+                  _onboardingStepIndex < 3 ? 'Next' : 'Got it!',
+                  style: TextStyle(
+                    color: AppColors.textoOscuro,
+                    fontSize: width * 0.06,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _onboardingStep(String text, IconData icon, double width) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.rosaFuerte.withOpacity(0.8), size: width * 0.1),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                color: AppColors.textoOscuro,
+                fontSize: width * 0.06,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final location = tz.getLocation(_selectedTimezone);
@@ -457,8 +577,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           HistoryBottomSheet(
             entries: _myHistory,
+            selectedTimezone: _selectedTimezone,
             onEdit: (index, entry) => _showEditDialog(index, entry),
           ),
+          if (_showOnboarding) _buildOnboarding(),
         ],
       ),
     );
