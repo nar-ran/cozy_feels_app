@@ -1,9 +1,10 @@
-# Cozy Feelings - Mood Tracker ![Status](https://img.shields.io/badge/Status-Beta-orange)
+# Cozy Feelings - Mood Tracker ![Status](https://img.shields.io/badge/Status-Released-brightgreen)
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white) 
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 ![Material Design 3](https://img.shields.io/badge/Material_Design_3-757575?style=for-the-badge&logo=materialdesign&logoColor=white)
+[![Get it on Google Play](https://img.shields.io/badge/Google_Play-Get_it_Now-black?style=for-the-badge&logo=google-play)](https://play.google.com/store/apps/details?id=com.nkl.cozy_feels_app)
 
 ## ✨ [View Design Prototype in Figma →](https://www.figma.com/design/Z7xqv9mjPvsmjpUS3ZEPUv/Cozy-App?node-id=0-1&t=MlOr3DQYdeEZam6D-1)
 
@@ -29,10 +30,10 @@ The interface was meticulously planned and designed in **Figma**, focusing on so
 
 The project is constantly evolving. These are the features currently in development:
 
-- **Play Store Release:** Coming soon! The app will be available for public download shortly. If you are interested in trying the beta version, feel free to contact me.
-- **Multi-theme Support:** Additional color themes (Dark mode, Earth tones, etc.) to customize your cozy experience.
-- **Localization:** Support for multiple languages, starting with Spanish and English.
-- **Reminders:** Optional daily notifications to remind you to check in with your feelings.
+- [x] **Official Play Store Launch:** The app is officially available for Android. Check it out on the Google Play Store and start tracking your feelings today.
+- [ ] **Multi-theme Support:** Additional color themes (Dark mode, Earth tones, etc.) to customize your cozy experience.
+- [ ] **Localization:** Support for multiple languages, starting with Spanish and English.
+- [ ] **Reminders:** Optional daily notifications to remind you to check in with your feelings.
 
 ## ⚙️ Development Setup
 
