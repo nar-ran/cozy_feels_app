@@ -2,15 +2,19 @@ import 'package:cozy_feels_app/core/constants/app_assets.dart';
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
 import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
+import 'package:cozy_feels_app/features/history/domain/services/backup_service.dart';
+import 'package:cozy_feels_app/features/history/domain/services/mood_storage_service.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/history_bottom_sheet.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/mood_editor_dialog.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/mood_selector_grid.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/onboarding_overlay.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/settings_bottom_sheet.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/timezone_selector_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
-import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _showOnboarding = false;
-  int _onboardingStepIndex = 1;
+  final MoodStorageService _storage = MoodStorageService();
 
   final TextEditingController _textController = TextEditingController();
   final List<HistoryEntry> _myHistory = [];
@@ -39,56 +43,32 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     tz.initializeTimeZones();
-    _loadHistory();
-    _checkOnboarding();
+    _initData();
   }
 
-  Future<void> _checkOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    // Si la llave 'seen_onboarding' no existe, es la primera vez
-    final bool? seenOnboarding = prefs.getBool('seen_onboarding');
-
-    if (seenOnboarding == null || seenOnboarding == false) {
-      setState(() {
-        _showOnboarding = true;
-      });
-    }
-  }
-
-  Future<void> _closeOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('seen_onboarding', true);
-    setState(() {
-      _showOnboarding = false;
-    });
-  }
-
-  Future<void> _loadHistory() async {
-    final prefs = await SharedPreferences.getInstance();
-    final historyJson = prefs.getStringList('history');
-    final savedTimezone = prefs.getString('selected_timezone');
+  Future<void> _initData() async {
+    final history = await _storage.loadHistory();
+    final timezone = await _storage.loadTimezone();
+    final seenOnboarding = await _storage.hasSeenOnboarding();
 
     setState(() {
-      if (historyJson != null) {
-        _myHistory.addAll(
-            historyJson.map((json) => HistoryEntry.fromJson(jsonDecode(json))));
-      }
-      if (savedTimezone != null) {
-        _selectedTimezone = savedTimezone;
-      }
+      _myHistory.addAll(history);
+      if (timezone != null) _selectedTimezone = timezone;
+      _showOnboarding = !seenOnboarding;
     });
-  }
-
-  Future<void> _saveTimezone(String timezone) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('selected_timezone', timezone);
   }
 
   Future<void> _saveHistory() async {
-    final prefs = await SharedPreferences.getInstance();
-    final historyJson =
-        _myHistory.map((entry) => jsonEncode(entry.toJson())).toList();
-    await prefs.setStringList('history', historyJson);
+    await _storage.saveHistory(_myHistory);
+  }
+
+  Future<void> _saveTimezone(String timezone) async {
+    await _storage.saveTimezone(timezone);
+  }
+
+  Future<void> _closeOnboarding() async {
+    await _storage.setOnboardingSeen();
+    setState(() => _showOnboarding = false);
   }
 
   void _updateHistoryEntry(int index, String newMessage, String newEmoji) {
@@ -143,320 +123,44 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showTimezoneDialog() {
     showDialog(
       context: context,
-      builder: (context) {
-        final width = MediaQuery.of(context).size.width;
-        return Dialog(
-          backgroundColor: AppColors.fondoSoft,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.7),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: AppColors.rosaFuerte, width: 2),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                StrokeText(
-                  text: 'Select Zone',
-                  fontSize: width * 0.08,
-                  color: AppColors.rosaFuerte,
-                  strokeColor: AppColors.textoOscuro,
-                ),
-                const SizedBox(height: 20),
-                Flexible(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: _timezoneMap.entries.map((entry) {
-                        final isSelected = _selectedTimezone == entry.value;
-                        final zoneLocation = tz.getLocation(entry.value);
-                        final zoneNow = tz.TZDateTime.now(zoneLocation);
-                        final timeString =
-                            DateFormat('hh:mm a').format(zoneNow);
-
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() => _selectedTimezone = entry.value);
-                            _saveTimezone(entry.value);
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? AppColors.rosaFuerte
-                                  : AppColors.naranjaPiel,
-                              borderRadius: BorderRadius.circular(25),
-                              border: Border.all(
-                                  color: AppColors.rosaFuerte, width: 1.5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    entry.key,
-                                    style: TextStyle(
-                                      fontSize: width * 0.04,
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: isSelected
-                                          ? Colors.white
-                                          : AppColors.textoOscuro,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  timeString,
-                                  style: TextStyle(
-                                    fontSize: width * 0.035,
-                                    color: isSelected
-                                        ? Colors.white70
-                                        : AppColors.textoOscuro
-                                            .withOpacity(0.6),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showEditDialog(int index, HistoryEntry entry) {
-    final TextEditingController editController =
-        TextEditingController(text: entry.message);
-    String selectedEmoji = entry.emojiPath;
-    final String formattedDate = DateFormat('MMMM dd, yyyy').format(entry.date);
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            final width = MediaQuery.of(context).size.width;
-            return Dialog(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(maxWidth: 400),
-                decoration: BoxDecoration(
-                  color: AppColors.fondoSoft,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // 1. Fecha
-                      StrokeText(
-                        text: formattedDate,
-                        fontSize: width * 0.08,
-                        color: AppColors.rosaFuerte,
-                        strokeColor: AppColors.textoOscuro,
-                      ),
-                      const SizedBox(height: 25),
-
-                      // 2. Grid de Emojis
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: GridView.count(
-                          shrinkWrap: true,
-                          crossAxisCount: 7,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: emojis.map((e) {
-                            final isSelected = selectedEmoji == e.value;
-                            return GestureDetector(
-                              onTap: () =>
-                                  setDialogState(() => selectedEmoji = e.value),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: isSelected
-                                      ? AppColors.naranjaPiel
-                                      : Colors.transparent,
-                                ),
-                                padding: EdgeInsets.all(width * 0.01),
-                                child: SvgPicture.asset(
-                                  e.value,
-                                  colorFilter: const ColorFilter.mode(
-                                    AppColors.textoOscuro,
-                                    BlendMode.srcIn,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-
-                      // 3. Cuadro de texto
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.naranjaPiel,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                color: AppColors.rosaFuerte, width: 1.5),
-                          ),
-                          padding: const EdgeInsets.all(18),
-                          child: TextField(
-                            controller: editController,
-                            maxLines: 4,
-                            style: TextStyle(
-                              color: AppColors.textoOscuro,
-                              fontSize: width * 0.06,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 25),
-
-                      // 4. Botón Guardar
-                      GestureDetector(
-                        onTap: () {
-                          _updateHistoryEntry(
-                              index, editController.text, selectedEmoji);
-                          Navigator.pop(context);
-                        },
-                        child: Text("Save Changes",
-                            style: TextStyle(
-                                fontSize: width * 0.07,
-                                color: AppColors.rosaFuerte,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildOnboarding() {
-    final width = MediaQuery.of(context).size.width;
-
-    return Container(
-      color: AppColors.fondoSoft.withOpacity(0.89),
-      width: double.infinity,
-      height: double.infinity,
-      child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            StrokeText(
-              text: 'Guide $_onboardingStepIndex/3',
-              fontSize: width * 0.08,
-              color: AppColors.rosaFuerte,
-              strokeColor: AppColors.textoOscuro,
-            ),
-            const SizedBox(height: 40),
-
-            if (_onboardingStepIndex == 1) ...[
-              _onboardingStep(
-                  "Write (optional) and TAP AN EMOJI to save your day.",
-                  Icons.auto_awesome,
-                  width),
-            ] else if (_onboardingStepIndex == 2) ...[
-              _onboardingStep(
-                  "Slide up the history and TAP ANY ENTRY to edit or delete it.",
-                  Icons.history_edu,
-                  width),
-            ] else if (_onboardingStepIndex == 3) ...[
-              _onboardingStep(
-                  "TAP THE DATE at the top to change your Timezone.",
-                  Icons.language,
-                  width),
-            ],
-
-            const SizedBox(height: 60),
-
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  if (_onboardingStepIndex < 3) {
-                    _onboardingStepIndex++;
-                  } else {
-                    _closeOnboarding();
-                  }
-                });
-              },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                decoration: BoxDecoration(
-                  color: AppColors.rosaFuerte.withOpacity(0.60),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                      color: AppColors.textoOscuro.withOpacity(0.3),
-                      width: 1.5),
-                ),
-                child: Text(
-                  _onboardingStepIndex < 3 ? 'Next' : 'Got it!',
-                  style: TextStyle(
-                    color: AppColors.textoOscuro,
-                    fontSize: width * 0.06,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+      builder: (context) => TimezoneSelectorDialog(
+        timezoneMap: _timezoneMap,
+        selectedTimezone: _selectedTimezone,
+        onSelect: (tz) {
+          setState(() => _selectedTimezone = tz);
+          _saveTimezone(tz);
+          Navigator.pop(context);
+        },
       ),
     );
   }
 
-  Widget _onboardingStep(String text, IconData icon, double width) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: Row(
-        children: [
-          Icon(icon, color: AppColors.rosaFuerte.withOpacity(0.8), size: width * 0.1),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                color: AppColors.textoOscuro,
-                fontSize: width * 0.06,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+  void _showEditDialog(int index, HistoryEntry entry) {
+    showDialog(
+      context: context,
+      builder: (context) => MoodEditorDialog(
+        date: entry.date,
+        initialMessage: entry.message,
+        initialEmoji: entry.emojiPath,
+        emojis: emojis,
+        onSave: (msg, emoji) {
+          _updateHistoryEntry(index, msg, emoji);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  void _showSettings(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SettingsBottomSheet(
+        onExport: () async {
+          final history = await _storage.loadHistory();
+          await BackupService.exportBackup(history);
+        },
+        onImport: () async {},
       ),
     );
   }
@@ -477,22 +181,33 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: GestureDetector(
-                      onTap: _showTimezoneDialog,
-                      child: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: Text(
-                          formattedDate,
-                          style: TextStyle(
-                            color: AppColors.rosaFuerte,
-                            fontSize: width * 0.09,
-                            fontWeight: FontWeight.bold,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => _showSettings(context),
+                        child: SvgPicture.asset(
+                          AppAssets.featureIcons['Settings']!,
+                          width: 28,
+                          colorFilter: const ColorFilter.mode(
+                              AppColors.textoOscuro, BlendMode.srcIn),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: _showTimezoneDialog,
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: Text(
+                            formattedDate,
+                            style: TextStyle(
+                              color: AppColors.rosaFuerte,
+                              fontSize: width * 0.08,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -544,28 +259,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: AppColors.rosaFuerte,
                             strokeColor: AppColors.textoOscuro),
                         Expanded(
-                          child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 7,
-                              mainAxisSpacing: 10,
-                              crossAxisSpacing: 10,
-                            ),
-                            itemCount: emojis.length,
-                            itemBuilder: (context, index) {
-                              final emoji = emojis[index];
-                              return GestureDetector(
-                                onTap: () => _saveMood(emoji.value),
-                                child: Padding(
-                                  padding: EdgeInsets.all(width * 0.01),
-                                  child: SvgPicture.asset(
-                                    emoji.value,
-                                    colorFilter: const ColorFilter.mode(
-                                        AppColors.textoOscuro, BlendMode.srcIn),
-                                  ),
-                                ),
-                              );
-                            },
+                          child: MoodSelectorGrid(
+                            emojis: emojis,
+                            onEmojiSelected: _saveMood,
                           ),
                         ),
                       ],
@@ -580,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
             selectedTimezone: _selectedTimezone,
             onEdit: (index, entry) => _showEditDialog(index, entry),
           ),
-          if (_showOnboarding) _buildOnboarding(),
+          if (_showOnboarding) OnboardingOverlay(onFinish: _closeOnboarding),
         ],
       ),
     );
