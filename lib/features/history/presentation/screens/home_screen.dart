@@ -5,6 +5,7 @@ import 'package:cozy_feels_app/features/history/domain/entities/history_entry.da
 import 'package:cozy_feels_app/features/history/domain/services/backup_service.dart';
 import 'package:cozy_feels_app/features/history/domain/services/mood_storage_service.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/history_bottom_sheet.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/import_preview_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/mood_editor_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/mood_selector_grid.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/onboarding_overlay.dart';
@@ -160,7 +161,49 @@ class _HomeScreenState extends State<HomeScreen> {
           final history = await _storage.loadHistory();
           await BackupService.exportBackup(history);
         },
-        onImport: () async {},
+        onImport: () async {
+          try {
+            final importedData = await BackupService.importBackup();
+            if (importedData == null || importedData.isEmpty) {
+              return;
+            }
+
+            if (!context.mounted) return;
+
+            final List<HistoryEntry>? entriesToAdd =
+                await showDialog<List<HistoryEntry>>(
+              context: context,
+              barrierDismissible: true,
+              builder: (dialogContext) => ImportPreviewDialog(
+                importedEntries: importedData,
+                currentEntries: _myHistory,
+              ),
+            );
+
+            if (entriesToAdd != null && entriesToAdd.isNotEmpty) {
+              setState(() {
+                _myHistory.addAll(entriesToAdd);
+                _myHistory.sort((a, b) => b.date.compareTo(a.date));
+              });
+
+              await _storage.saveHistory(_myHistory);
+
+              if (!context.mounted) return;
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Memories imported successfully!"),
+                  backgroundColor: AppColors.rosaFuerte,
+                ),
+              );
+            }
+          } catch (e) {
+            if (!context.mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Error: $e"), backgroundColor: const Color.fromARGB(255, 223, 112, 104)),
+            );
+          }
+        },
       ),
     );
   }

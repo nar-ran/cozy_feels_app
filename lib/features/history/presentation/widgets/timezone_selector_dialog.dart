@@ -32,7 +32,6 @@ class TimezoneSelectorDialog extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.fondoSoft,
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: AppColors.rosaFuerte, width: 2),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
