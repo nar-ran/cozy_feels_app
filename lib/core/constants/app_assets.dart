@@ -27,11 +27,11 @@ class AppAssets {
     'Restore': '$_featuresPath/settings_backup_restore.svg',
     'Upload': '$_featuresPath/cloud_upload.svg',
     'Download': '$_featuresPath/cloud_download.svg',
-    'Done': '$_featuresPath/cloud_done.svg',
-    'Offline': '$_featuresPath/cloud_off.svg',
-    'CloudCircle': '$_featuresPath/cloud_circle.svg',
     'Palette': '$_featuresPath/palette.svg',
     'Help': '$_featuresPath/help.svg',
     'Save': '$_featuresPath/save.svg',
+
+    'Translate': '$_featuresPath/translate.svg',
+    'Language': '$_featuresPath/language.svg',
   };
 }
