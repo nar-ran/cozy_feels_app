@@ -7,6 +7,9 @@
 .pub/
 build/
 
+# Localizaton generated files
+lib/l10n/app_localizations*.dart
+
 # Archivos específicos de Android
 .gradle/
 local.properties
