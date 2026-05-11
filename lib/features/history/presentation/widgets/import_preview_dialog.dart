@@ -19,6 +19,8 @@ class ImportPreviewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final String locale = Localizations.localeOf(context).languageCode;
+
     final width = MediaQuery.of(context).size.width;
 
     final newEntries = importedEntries.where((imported) {
@@ -53,7 +55,6 @@ class ImportPreviewDialog extends StatelessWidget {
                 strokeColor: AppColors.textoOscuro,
               ),
               const SizedBox(height: 25),
-
               Text(
                 newEntries.isEmpty
                     ? l10n.import_preview_at_date
@@ -65,7 +66,6 @@ class ImportPreviewDialog extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-
               if (newEntries.isNotEmpty)
                 ConstrainedBox(
                   constraints: BoxConstraints(
@@ -123,8 +123,16 @@ class ImportPreviewDialog extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    DateFormat('MMMM dd, yyyy')
-                                        .format(entry.date),
+                                    () {
+                                      var dateLabel =
+                                          DateFormat('MMM dd, yyyy', locale)
+                                              .format(entry.date);
+
+                                      return dateLabel.isNotEmpty
+                                          ? dateLabel[0].toUpperCase() +
+                                              dateLabel.substring(1)
+                                          : dateLabel;
+                                    }(),
                                     style: TextStyle(
                                       color: AppColors.textoOscuro
                                           .withOpacity(0.6),
@@ -140,7 +148,6 @@ class ImportPreviewDialog extends StatelessWidget {
                     },
                   ),
                 ),
-
               if (duplicates > 0)
                 Container(
                   margin: const EdgeInsets.only(top: 20),
@@ -161,9 +168,7 @@ class ImportPreviewDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-
               const SizedBox(height: 30),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

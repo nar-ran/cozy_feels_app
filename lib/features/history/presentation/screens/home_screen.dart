@@ -228,12 +228,19 @@ class _HomeScreenState extends State<HomeScreen> {
     final now = tz.TZDateTime.now(location);
 
     final String locale = Localizations.localeOf(context).languageCode;
-    String formattedDate = DateFormat('EEEE, MMM d', locale).format(now);
+    var formattedDate = DateFormat('EEEE, MMM d', locale).format(now);
 
     if (formattedDate.isNotEmpty) {
       formattedDate =
           formattedDate[0].toUpperCase() + formattedDate.substring(1);
     }
+
+    formattedDate = formattedDate.split(' ').map((word) {
+      if (word.length > 1) {
+        return word[0].toUpperCase() + word.substring(1);
+      }
+      return word;
+    }).join(' ');
 
     final width = MediaQuery.of(context).size.width;
 
@@ -279,9 +286,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 35.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: 40),
-                        Text(l10n.home_title,
+                        Text(
+                            l10n.home_title,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: width * 0.15,

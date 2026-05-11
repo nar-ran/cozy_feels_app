@@ -92,12 +92,17 @@ class HistoryBottomSheet extends StatelessWidget {
                               'assets/icons/svg/feelings/');
                         }
 
-                        // --- ZONA HORARIA ---
+                        
+                        // --- ZONA HORARIA Y TRADUCCIÓN ---
                         final location = tz.getLocation(selectedTimezone);
                         final dateInZone =
                             tz.TZDateTime.from(entry.date, location);
-                        var formattedDate =
-                            DateFormat('MMMM dd, yyyy').format(dateInZone);
+
+                        final String locale =
+                            Localizations.localeOf(context).languageCode;
+
+                        var formattedDate = DateFormat('MMMM dd, yyyy', locale)
+                            .format(dateInZone);
 
                         if (formattedDate.isNotEmpty) {
                           formattedDate = formattedDate[0].toUpperCase() +

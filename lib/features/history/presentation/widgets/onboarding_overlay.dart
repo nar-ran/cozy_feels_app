@@ -102,7 +102,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
         );
       case 3:
         return _onboardingStep(
-          l10n.onboarding_step1,
+          l10n.onboarding_step3,
           Icons.language,
           width,
           key: const ValueKey(3),
