@@ -34,6 +34,17 @@ class MoodStorageService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_timezoneKey, timezone);
   }
+  
+  // -------- LANGUAGE ----------
+  Future<void> saveLanguage(String languageCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language_code', languageCode);
+  }
+
+  Future<String?> loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language_code');
+  }
 
   // --- ONBOARDING ---
   Future<bool> hasSeenOnboarding() async {

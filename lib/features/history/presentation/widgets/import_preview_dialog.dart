@@ -1,5 +1,6 @@
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
 import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
+import 'package:cozy_feels_app/l10n/app_localizations.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,6 +18,7 @@ class ImportPreviewDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final width = MediaQuery.of(context).size.width;
 
     final newEntries = importedEntries.where((imported) {
@@ -45,7 +47,7 @@ class ImportPreviewDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               StrokeText(
-                text: "Import Preview",
+                text: l10n.import_preview_title,
                 fontSize: width * 0.08,
                 color: AppColors.rosaFuerte,
                 strokeColor: AppColors.textoOscuro,
@@ -54,8 +56,8 @@ class ImportPreviewDialog extends StatelessWidget {
 
               Text(
                 newEntries.isEmpty
-                    ? "Everything is up to date!"
-                    : "Found ${newEntries.length} new entries:",
+                    ? l10n.import_preview_at_date
+                    : l10n.import_preview_found(newEntries.length),
                 style: TextStyle(
                   color: AppColors.textoOscuro,
                   fontSize: width * 0.05,
@@ -110,7 +112,7 @@ class ImportPreviewDialog extends StatelessWidget {
                                 children: [
                                   Text(
                                     entry.message.isEmpty
-                                        ? "No words..."
+                                        ? l10n.import_preview_empty
                                         : entry.message,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -149,7 +151,7 @@ class ImportPreviewDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Text(
-                    "$duplicates days already exist in your history and will be skipped.",
+                    l10n.import_preview_duplicate(duplicates),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: AppColors.rosaFuerte,
@@ -168,7 +170,7 @@ class ImportPreviewDialog extends StatelessWidget {
                   GestureDetector(
                     onTap: () => Navigator.pop(context, null),
                     child: Text(
-                      "CANCEL",
+                      l10n.common_cancel,
                       style: TextStyle(
                         fontSize: width * 0.05,
                         color: AppColors.textoOscuro.withOpacity(0.5),
@@ -180,7 +182,7 @@ class ImportPreviewDialog extends StatelessWidget {
                     GestureDetector(
                       onTap: () => Navigator.pop(context, newEntries),
                       child: Text(
-                        "IMPORT",
+                        l10n.common_import,
                         style: TextStyle(
                           fontSize: width * 0.06,
                           color: AppColors.rosaFuerte,

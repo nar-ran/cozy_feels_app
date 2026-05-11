@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
+import 'package:cozy_feels_app/l10n/app_localizations.dart';
 import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
 import 'package:intl/intl.dart';
 
@@ -50,7 +51,13 @@ class _MoodEditorDialogState extends State<MoodEditorDialog> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final formattedDate = DateFormat('MMMM dd, yyyy').format(widget.date);
+    final l10n = AppLocalizations.of(context)!;
+    var formattedDate = DateFormat('MMMM dd, yyyy').format(widget.date);
+
+    if (formattedDate.isNotEmpty) {
+      formattedDate =
+          formattedDate[0].toUpperCase() + formattedDate.substring(1);
+    }
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -144,7 +151,7 @@ class _MoodEditorDialogState extends State<MoodEditorDialog> {
               GestureDetector(
                 onTap: () => widget.onSave(_controller.text, _selectedEmoji),
                 child: Text(
-                  "Save Changes",
+                  l10n.editor_save_button,
                   style: TextStyle(
                     fontSize: width * 0.07,
                     color: AppColors.rosaFuerte,

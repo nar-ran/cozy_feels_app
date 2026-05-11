@@ -1,6 +1,7 @@
 import 'package:cozy_feels_app/core/constants/app_assets.dart';
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
 import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
+import 'package:cozy_feels_app/l10n/app_localizations.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
 import 'package:cozy_feels_app/features/history/domain/services/backup_service.dart';
 import 'package:cozy_feels_app/features/history/domain/services/mood_storage_service.dart';
@@ -32,19 +33,23 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<HistoryEntry> _myHistory = [];
   final emojis = AppAssets.sentimentEmojis.entries.toList();
   String _selectedTimezone = 'America/New_York';
-  final Map<String, String> _timezoneMap = {
-    'Eastern Time (US/Canada)': 'America/New_York',
-    'Central Europe (Madrid/Paris)': 'Europe/Madrid',
-    'Argentina / Brazil (South)': 'America/Argentina/Buenos_Aires',
-    'Singapore / SE Asia': 'Asia/Singapore',
-    'London / Dublin (GMT)': 'Europe/London',
-  };
 
   @override
   void initState() {
     super.initState();
     tz.initializeTimeZones();
     _initData();
+  }
+
+  Map<String, String> _getTranslatedTimezoneMap(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return {
+      l10n.timezone_ny: 'America/New_York',
+      l10n.timezone_madrid: 'Europe/Madrid',
+      l10n.timezone_ba: 'America/Argentina/Buenos_Aires',
+      l10n.timezone_singapore: 'Asia/Singapore',
+      l10n.timezone_london: 'Europe/London',
+    };
   }
 
   Future<void> _initData() async {
@@ -84,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _saveMood(String selectedEmojiPath) {
+    final l10n = AppLocalizations.of(context)!;
     final location = tz.getLocation(_selectedTimezone);
     final now = tz.TZDateTime.now(location);
 
@@ -97,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (alreadyExists) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text("You've already recorded your mood for today!"),
+          content: Text(l10n.home_already_recorded),
           backgroundColor: AppColors.rosaFuerte,
           behavior: SnackBarBehavior.floating,
           shape:
@@ -122,10 +128,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showTimezoneDialog() {
+    final translatedMap = _getTranslatedTimezoneMap(context);
+
     showDialog(
       context: context,
       builder: (context) => TimezoneSelectorDialog(
-        timezoneMap: _timezoneMap,
+        timezoneMap: translatedMap,
         selectedTimezone: _selectedTimezone,
         onSelect: (tz) {
           setState(() => _selectedTimezone = tz);
@@ -153,6 +161,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showSettings(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -191,8 +201,8 @@ class _HomeScreenState extends State<HomeScreen> {
               if (!context.mounted) return;
 
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Memories imported successfully!"),
+                SnackBar(
+                  content: Text(l10n.settings_import_success),
                   backgroundColor: AppColors.rosaFuerte,
                 ),
               );
@@ -200,7 +210,9 @@ class _HomeScreenState extends State<HomeScreen> {
           } catch (e) {
             if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Error: $e"), backgroundColor: const Color.fromARGB(255, 223, 112, 104)),
+              SnackBar(
+                  content: Text("Error: $e"),
+                  backgroundColor: const Color.fromARGB(255, 223, 112, 104)),
             );
           }
         },
@@ -210,9 +222,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final location = tz.getLocation(_selectedTimezone);
     final now = tz.TZDateTime.now(location);
-    final String formattedDate = DateFormat('EEEE, MMM d').format(now);
+
+    final String locale = Localizations.localeOf(context).languageCode;
+    String formattedDate = DateFormat('EEEE, MMM d', locale).format(now);
+
+    if (formattedDate.isNotEmpty) {
+      formattedDate =
+          formattedDate[0].toUpperCase() + formattedDate.substring(1);
+    }
+
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -259,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: [
                         const SizedBox(height: 40),
-                        Text('How do you feel today?',
+                        Text(l10n.home_title,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: width * 0.15,
@@ -273,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                           decoration: InputDecoration(
-                            hintText: "Let it be all out...",
+                            hintText: l10n.home_hint_text,
                             hintStyle: TextStyle(
                               color: AppColors.rosaFuerte.withOpacity(0.8),
                             ),
@@ -297,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 30),
                         StrokeText(
-                            text: 'You prefer no words?',
+                            text: l10n.home_no_words_question,
                             fontSize: width * 0.12,
                             color: AppColors.rosaFuerte,
                             strokeColor: AppColors.textoOscuro),

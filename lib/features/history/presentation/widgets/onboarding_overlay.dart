@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
 import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
+import 'package:cozy_feels_app/l10n/app_localizations.dart';
 
 class OnboardingOverlay extends StatefulWidget {
   final VoidCallback onFinish;
@@ -26,6 +27,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final width = MediaQuery.of(context).size.width;
 
     return Container(
@@ -37,7 +39,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             StrokeText(
-              text: 'Guide $_stepIndex/3',
+              text: l10n.onboarding_guide_step(_stepIndex, 3),
               fontSize: width * 0.08,
               color: AppColors.rosaFuerte,
               strokeColor: AppColors.textoOscuro,
@@ -65,7 +67,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                       width: 1.5),
                 ),
                 child: Text(
-                  _stepIndex < 3 ? 'Next' : 'Got it!',
+                  _stepIndex < 3 ? l10n.onboarding_next : l10n.onboarding_finish,
                   style: TextStyle(
                     color: AppColors.textoOscuro,
                     fontSize: width * 0.06,
@@ -81,24 +83,26 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
   }
 
   Widget _buildStepContent(int step, double width) {
+    final l10n = AppLocalizations.of(context)!;
+    
     switch (step) {
       case 1:
         return _onboardingStep(
-          "Write (optional) and TAP AN EMOJI to save your day.",
+          l10n.onboarding_step1,
           Icons.auto_awesome,
           width,
           key: const ValueKey(1),
         );
       case 2:
         return _onboardingStep(
-          "Slide up the history and TAP ANY ENTRY to edit or delete it.",
+          l10n.onboarding_step2,
           Icons.history_edu,
           width,
           key: const ValueKey(2),
         );
       case 3:
         return _onboardingStep(
-          "TAP THE DATE at the top to change your Timezone.",
+          l10n.onboarding_step1,
           Icons.language,
           width,
           key: const ValueKey(3),

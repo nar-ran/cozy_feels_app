@@ -5,6 +5,7 @@ import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
 import 'package:intl/intl.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:cozy_feels_app/l10n/app_localizations.dart';
 
 class HistoryBottomSheet extends StatelessWidget {
   final List<HistoryEntry> entries;
@@ -20,6 +21,7 @@ class HistoryBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final width = MediaQuery.of(context).size.width;
     final double emojiSize = width * 0.1;
 
@@ -51,7 +53,7 @@ class HistoryBottomSheet extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: StrokeText(
-                        text: 'History',
+                        text: l10n.history_title,
                         fontSize: width * 0.12,
                         color: AppColors.rosaFuerte,
                         strokeColor: AppColors.textoOscuro,
@@ -65,7 +67,7 @@ class HistoryBottomSheet extends StatelessWidget {
                   hasScrollBody: false,
                   child: Center(
                     child: Text(
-                      "No entries yet...",
+                      l10n.history_empty_state,
                       style: TextStyle(
                           color: AppColors.textoOscuro,
                           fontFamily: 'Dongle',
@@ -94,8 +96,13 @@ class HistoryBottomSheet extends StatelessWidget {
                         final location = tz.getLocation(selectedTimezone);
                         final dateInZone =
                             tz.TZDateTime.from(entry.date, location);
-                        final formattedDate =
+                        var formattedDate =
                             DateFormat('MMMM dd, yyyy').format(dateInZone);
+
+                        if (formattedDate.isNotEmpty) {
+                          formattedDate = formattedDate[0].toUpperCase() +
+                              formattedDate.substring(1);
+                        }
 
                         return GestureDetector(
                           onTap: () => onEdit(index, entry),
@@ -143,7 +150,7 @@ class HistoryBottomSheet extends StatelessWidget {
                                         ),
                                         Text(
                                           entry.message.isEmpty
-                                              ? "No words today..."
+                                              ? l10n.history_no_words
                                               : entry.message,
                                           style: TextStyle(
                                               fontSize: width * 0.055,

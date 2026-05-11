@@ -1,7 +1,10 @@
+import 'package:cozy_feels_app/features/history/presentation/widgets/language_selector_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:cozy_feels_app/core/constants/app_assets.dart';
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
+import 'package:cozy_feels_app/main.dart';
+import 'package:cozy_feels_app/l10n/app_localizations.dart';
 
 class SettingsBottomSheet extends StatelessWidget {
   final VoidCallback onExport;
@@ -12,6 +15,9 @@ class SettingsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final currentLocale = Localizations.localeOf(context);
+
     return Container(
       padding: const EdgeInsets.all(25),
       decoration: const BoxDecoration(
@@ -32,17 +38,37 @@ class SettingsBottomSheet extends StatelessWidget {
 
           _buildOption(
             icon: AppAssets.featureIcons['Upload']!,
-            title: "Export Backup",
-            subtitle: "Save your history to a file",
+            title: l10n.settings_export_title,
+            subtitle: l10n.settings_export_subtitle,
             onTap: onExport,
           ),
           const SizedBox(height: 15),
           _buildOption(
             icon: AppAssets.featureIcons['Restore']!,
-            title: "Import Backup",
-            subtitle: "Restore your feelings from a file",
+            title: l10n.settings_import_title,
+            subtitle: l10n.settings_import_subtitle,
             onTap: onImport,
           ),
+          const SizedBox(height: 15),
+
+          _buildOption(
+            icon: AppAssets.featureIcons['Language'] ??
+                AppAssets.featureIcons['Translate']!,
+            title: l10n.settings_language,
+            subtitle: l10n.settings_current_language_label,
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => LanguageSelectorDialog(
+                  currentLocale: currentLocale,
+                  onLocaleSelected: (newLocale) {
+                    CozyFeelsApp.setLocale(context, newLocale);
+                  },
+                ),
+              );
+            },
+          ),
+          
           const SizedBox(height: 30),
         ],
       ),

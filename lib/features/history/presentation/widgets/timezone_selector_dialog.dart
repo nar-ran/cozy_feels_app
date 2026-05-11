@@ -1,3 +1,4 @@
+import 'package:cozy_feels_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
 import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
@@ -18,6 +19,7 @@ class TimezoneSelectorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final i10n = AppLocalizations.of(context)!;
     final width = MediaQuery.of(context).size.width;
 
     return Dialog(
@@ -37,7 +39,7 @@ class TimezoneSelectorDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             StrokeText(
-              text: 'Select Zone',
+              text: i10n.timezone_title,
               fontSize: width * 0.08,
               color: AppColors.rosaFuerte,
               strokeColor: AppColors.textoOscuro,
