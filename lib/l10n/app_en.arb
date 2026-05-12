@@ -57,11 +57,6 @@
 
   "sectionTimezone": "========== TIMEZONE SELECTOR ==========",
   "timezone_title": "Select Zone",
-  "timezone_ny": "Eastern Time (US/Canada)",
-  "timezone_madrid": "Central Europe (Madrid/Paris)",
-  "timezone_ba": "Argentina / Brazil (South)",
-  "timezone_singapore": "Singapore / SE Asia",
-  "timezone_london": "London / Dublin (GMT)",
 
   "sectionLanguage": "========== LANGUAGE SELECTOR ==========",
   "language_title": "Select Language",

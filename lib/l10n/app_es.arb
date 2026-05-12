@@ -61,11 +61,6 @@
 
   "sectionTimezone": "========== SELECTOR DE ZONA HORARIA ==========",
   "timezone_title": "Seleccionar Zona",
-  "timezone_ny": "Hora del Este (EE. UU./Canadá)",
-  "timezone_madrid": "Europa Central (Madrid/París)",
-  "timezone_ba": "Argentina / Brasil (Sur)",
-  "timezone_singapore": "Singapur / Sudeste Asiático",
-  "timezone_london": "Londres / Dublín (GMT)",
 
   "sectionLanguage": "========== SELECTOR DE IDIOMA ==========",
   "language_title": "Seleccionar Idioma",

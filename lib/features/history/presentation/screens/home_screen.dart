@@ -41,17 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _initData();
   }
 
-  Map<String, String> _getTranslatedTimezoneMap(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return {
-      l10n.timezone_ny: 'America/New_York',
-      l10n.timezone_madrid: 'Europe/Madrid',
-      l10n.timezone_ba: 'America/Argentina/Buenos_Aires',
-      l10n.timezone_singapore: 'Asia/Singapore',
-      l10n.timezone_london: 'Europe/London',
-    };
-  }
-
   Future<void> _initData() async {
     final history = await _storage.loadHistory();
     final timezone = await _storage.loadTimezone();
@@ -128,21 +117,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showTimezoneDialog() {
-    final translatedMap = _getTranslatedTimezoneMap(context);
-
     showDialog(
       context: context,
       builder: (context) => TimezoneSelectorDialog(
-        timezoneMap: translatedMap,
         selectedTimezone: _selectedTimezone,
-        onSelect: (tz) {
-          setState(() => _selectedTimezone = tz);
-          _saveTimezone(tz);
+        onSelect: (newTz) {
+          setState(() => _selectedTimezone = newTz);
+          _saveTimezone(newTz);
           Navigator.pop(context);
         },
       ),
     );
-  }
+  }   
 
   void _showEditDialog(int index, HistoryEntry entry) {
     showDialog(
