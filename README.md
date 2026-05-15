@@ -32,7 +32,7 @@ The project is constantly evolving. These are the features currently in developm
 
 - [x] **Official Play Store Launch:** The app is officially available for Android. Check it out on the Google Play Store and start tracking your feelings today.
 - [ ] **Multi-theme Support:** Additional color themes (Dark mode, Earth tones, etc.) to customize your cozy experience.
-- [ ] **Localization:** Support for multiple languages, starting with Spanish and English.
+- [x] **Localization:** Support for multiple languages, starting with Spanish and English.
 - [ ] **Reminders:** Optional daily notifications to remind you to check in with your feelings.
 
 ## ⚙️ Development Setup
