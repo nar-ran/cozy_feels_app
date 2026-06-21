@@ -27,6 +27,7 @@ class AppAssets {
     'Restore': '$_featuresPath/settings_backup_restore.svg',
     'Upload': '$_featuresPath/cloud_upload.svg',
     'Download': '$_featuresPath/cloud_download.svg',
+    'Notifications': '$_featuresPath/notifications.svg',
     'Palette': '$_featuresPath/palette.svg',
     'Help': '$_featuresPath/help.svg',
     'Save': '$_featuresPath/save.svg',

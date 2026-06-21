@@ -1,4 +1,5 @@
 import 'package:cozy_feels_app/features/history/presentation/widgets/language_selector_dialog.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/notifications_manager_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:cozy_feels_app/core/constants/app_assets.dart';
@@ -34,23 +35,8 @@ class SettingsBottomSheet extends StatelessWidget {
               decoration: BoxDecoration(
                   color: AppColors.fondoSoft,
                   borderRadius: BorderRadius.circular(10))),
+          
           const SizedBox(height: 25),
-
-          _buildOption(
-            icon: AppAssets.featureIcons['Upload']!,
-            title: l10n.settings_export_title,
-            subtitle: l10n.settings_export_subtitle,
-            onTap: onExport,
-          ),
-          const SizedBox(height: 15),
-          _buildOption(
-            icon: AppAssets.featureIcons['Restore']!,
-            title: l10n.settings_import_title,
-            subtitle: l10n.settings_import_subtitle,
-            onTap: onImport,
-          ),
-          const SizedBox(height: 15),
-
           _buildOption(
             icon: AppAssets.featureIcons['Language'] ??
                 AppAssets.featureIcons['Translate']!,
@@ -68,7 +54,37 @@ class SettingsBottomSheet extends StatelessWidget {
               );
             },
           ),
-          
+
+          const SizedBox(height: 15),
+
+          _buildOption(
+            icon: AppAssets.featureIcons['Notifications']!,
+            title: l10n.settings_notifications_title,
+            subtitle: l10n.settings_notifications_subtitle,
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => NotificationsManagerDialog(),
+              );
+            },
+          ),
+
+          const SizedBox(height: 15),
+          _buildOption(
+            icon: AppAssets.featureIcons['Upload']!,
+            title: l10n.settings_export_title,
+            subtitle: l10n.settings_export_subtitle,
+            onTap: onExport,
+          ),
+
+          const SizedBox(height: 15),
+          _buildOption(
+            icon: AppAssets.featureIcons['Restore']!,
+            title: l10n.settings_import_title,
+            subtitle: l10n.settings_import_subtitle,
+            onTap: onImport,
+          ),
+
           const SizedBox(height: 30),
         ],
       ),
