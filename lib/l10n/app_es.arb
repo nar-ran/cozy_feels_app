@@ -5,6 +5,7 @@
   "common_cancel": "Cancelar",
   "common_save": "Guardar",
   "common_accept": "Aceptar",
+  "common_confirm": "Confirmar",
   "common_error": "Ha ocurrido un error",
   "common_back": "Atrás",
   "common_import": "Importar",
@@ -31,6 +32,10 @@
   "notificationsSettings": "========== NOTIFICACIONES ==========",
   "notifications_title": "Notificaciones",
   "notifications_new_reminder": "Agregar recordatorio",
+  "notifications_what_time": "¿A qué hora?",
+  "notifications_no_reminders": "No hay recordatorios configurados",
+  "notifications_push_title": "¿Cómo te sientes hoy?",
+  "notifications_push_body": "Es momento de tomar un respiro y registrar tus emociones.",
 
   "sectionSettings": "========== AJUSTES Y BACKUP ==========",
   "settings_export_title": "Exportar Respaldo",

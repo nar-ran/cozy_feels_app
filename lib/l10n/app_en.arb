@@ -5,6 +5,7 @@
   "common_cancel": "Cancel",
   "common_save": "Save",
   "common_accept": "Accept",
+  "common_confirm": "Confirm",
   "common_error": "An error occurred",
   "common_back": "Back",
   "common_import": "Import",
@@ -31,6 +32,10 @@
   "notificationsSettings": "========== NOTIFICATIONS ==========",
   "notifications_title": "Notifications",
   "notifications_new_reminder": "Add reminders",
+  "notifications_what_time": "At what time?",
+  "notifications_no_reminders": "No reminders configured",
+  "notifications_push_title": "How are you feeling today?",
+  "notifications_push_body": "It's time to take a breath and record your emotions.",
 
   "sectionSettings": "========== SETTINGS & BACKUP ==========",
   "settings_export_title": "Export Backup",

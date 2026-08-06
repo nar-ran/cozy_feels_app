@@ -11,7 +11,7 @@ class NotificationService {
   // --- INICIALIZAR NOTIFICACIONES ---
   Future<void> initNotification() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
 
     const DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings(
@@ -38,7 +38,7 @@ class NotificationService {
   }
 
   // --- PROGRAMAR NOTIFICACIÓN REPETITIVA POR DÍAS ---
-  Future<void> scheduleReminder(Reminder reminder) async {
+  Future<void> scheduleReminder(Reminder reminder, String title, String body) async {
     await cancelReminder(reminder.id);
     if (!reminder.isActive) return;
 
@@ -84,8 +84,8 @@ class NotificationService {
 
           await _notificationsPlugin.zonedSchedule(
             id: notificationId,
-            title: '¿Cómo te sientes hoy? 🌟',
-            body: 'Es momento de tomar un respiro y registrar tus emociones.',
+            title: title,
+            body: body,
             scheduledDate: scheduledDate,
             notificationDetails: platformDetails,
             matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,

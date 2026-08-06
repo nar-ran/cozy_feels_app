@@ -81,6 +81,8 @@ class _NotificationsManagerDialogState
   void _addReminderAction() async {
     if (!_selectedDays.contains(true)) return;
 
+    final i10n = AppLocalizations.of(context)!;
+
     final newReminder = Reminder(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       hour: _selectedHour,
@@ -98,7 +100,11 @@ class _NotificationsManagerDialogState
     });
 
     await _storageService.saveReminders(_remindersList);
-    await _notificationService.scheduleReminder(newReminder);
+    await _notificationService.scheduleReminder(
+      newReminder,
+      i10n.notifications_push_title,
+      i10n.notifications_push_body,
+    );
   }
 
   void _deleteReminderAction(int index) async {
@@ -146,7 +152,7 @@ class _NotificationsManagerDialogState
             mainAxisSize: MainAxisSize.min,
             children: [
               StrokeText(
-                text: "Notificaciones",
+                text: i10n.notifications_title,
                 fontSize: width * 0.08,
                 color: AppColors.rosaFuerte,
                 strokeColor: AppColors.textoOscuro,
@@ -174,7 +180,7 @@ class _NotificationsManagerDialogState
                               color: AppColors.textoOscuro, size: 22),
                           const SizedBox(width: 10),
                           Text(
-                            "Añadir recordatorio",
+                            i10n.notifications_new_reminder,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.textoOscuro,
@@ -203,7 +209,7 @@ class _NotificationsManagerDialogState
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("¿A qué hora?",
+                          Text(i10n.notifications_what_time,
                               style: TextStyle(
                                   color: AppColors.textoOscuro,
                                   fontWeight: FontWeight.bold,
@@ -276,7 +282,7 @@ class _NotificationsManagerDialogState
                       GestureDetector(
                         onTap: _addReminderAction,
                         child: Text(
-                          "Confirmar",
+                          i10n.common_confirm,
                           style: TextStyle(
                             fontSize: width * 0.07,
                             color: AppColors.rosaFuerte,
@@ -298,7 +304,7 @@ class _NotificationsManagerDialogState
                   ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Text(
-                        "No hay recordatorios configurados",
+                        i10n.notifications_no_reminders,
                         style: TextStyle(
                             color: AppColors.textoOscuro.withOpacity(0.5),
                             fontSize: width * 0.04,
