@@ -28,6 +28,10 @@
   "history_no_words": "Sin palabras hoy...",
   "history_delete_confirm": "¿Eliminar este recuerdo?",
 
+  "notificationsSettings": "========== NOTIFICACIONES ==========",
+  "notifications_title": "Notificaciones",
+  "notifications_new_reminder": "Agregar recordatorio",
+
   "sectionSettings": "========== AJUSTES Y BACKUP ==========",
   "settings_export_title": "Exportar Respaldo",
   "settings_export_subtitle": "Guarda tu historial en un archivo",
@@ -36,6 +40,10 @@
   "settings_language": "Idioma",
   "settings_current_language_label": "Español",
   "settings_import_success": "¡Recuerdos importados con éxito!",
+  
+  "settings_notifications_title": "Notificaciones",
+  "settings_notifications_subtitle": "Agregar recordatorios",
+  
 
   "sectionPreview": "========== VISTA PREVIA DE IMPORTACIÓN ==========",
   "import_preview_title": "Vista Previa",

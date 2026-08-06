@@ -15,7 +15,7 @@ import 'package:cozy_feels_app/features/history/presentation/widgets/timezone_se
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
@@ -124,6 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onSelect: (newTz) {
           setState(() => _selectedTimezone = newTz);
           _saveTimezone(newTz);
+          tz.setLocalLocation(tz.getLocation(newTz));
           Navigator.pop(context);
         },
       ),

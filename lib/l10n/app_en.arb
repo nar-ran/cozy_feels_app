@@ -28,6 +28,10 @@
   "history_no_words": "No words today...",
   "history_delete_confirm": "Delete this memory?",
 
+  "notificationsSettings": "========== NOTIFICATIONS ==========",
+  "notifications_title": "Notifications",
+  "notifications_new_reminder": "Add reminders",
+
   "sectionSettings": "========== SETTINGS & BACKUP ==========",
   "settings_export_title": "Export Backup",
   "settings_export_subtitle": "Save your history to a file",
@@ -36,6 +40,9 @@
   "settings_language": "Language",
   "settings_current_language_label": "English",
   "settings_import_success": "Memories imported successfully!",
+
+  "settings_notifications_title": "Notifications",
+  "settings_notifications_subtitle": "Add reminders",
 
   "sectionPreview": "========== IMPORT PREVIEW ==========",
   "import_preview_title": "Import Preview",

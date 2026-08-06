@@ -13,6 +13,26 @@ class Reminder {
     this.isActive = true,
   });
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'hour': hour,
+      'minute': minute,
+      'days': days,
+      'isActive': isActive,
+    };
+  }
+
+  factory Reminder.fromMap(Map<String, dynamic> map) {
+    return Reminder(
+      id: map['id'] ?? '',
+      hour: map['hour'] ?? 0,
+      minute: map['minute'] ?? 0,
+      days: List<bool>.from(map['days'] ?? []),
+      isActive: map['isActive'] ?? true,
+    );
+  }
+
   Reminder copyWith({
     String? id,
     int? hour,

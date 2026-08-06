@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../entities/reminder.dart';
+import 'package:cozy_feels_app/features/history/domain/entities/reminder.dart';
 
 class ReminderStorageService {
   static const String _remindersKey = 'user_reminders';
@@ -12,16 +12,14 @@ class ReminderStorageService {
 
     if (remindersJson == null) return [];
 
-    return remindersJson.map((jsonStr) {
-      final Map<String, dynamic> map = jsonDecode(jsonStr);
-      return Reminder(
-        id: map['id'] as String,
-        hour: map['hour'] as int,
-        minute: map['minute'] as int,
-        days: List<bool>.from(map['days'] as List),
-        isActive: map['isActive'] as bool? ?? true,
-      );
-    }).toList();
+    try {
+      return remindersJson.map((jsonStr) {
+        final Map<String, dynamic> map = jsonDecode(jsonStr);
+        return Reminder.fromMap(map);
+      }).toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   // --- GUARDAR RECORDATORIOS ---
@@ -29,13 +27,7 @@ class ReminderStorageService {
     final prefs = await SharedPreferences.getInstance();
 
     final remindersJson = reminders.map((reminder) {
-      return jsonEncode({
-        'id': reminder.id,
-        'hour': reminder.hour,
-        'minute': reminder.minute,
-        'days': reminder.days,
-        'isActive': reminder.isActive,
-      });
+      return jsonEncode(reminder.toMap());
     }).toList();
 
     await prefs.setStringList(_remindersKey, remindersJson);
