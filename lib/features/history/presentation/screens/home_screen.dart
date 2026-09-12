@@ -267,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: SvgPicture.asset(
                                   AppAssets.featureIcons['Settings']!,
                                   width: 28,
-                                  colorFilter: const ColorFilter.mode(
+                                  colorFilter: ColorFilter.mode(
                                       AppColors.textoOscuro, BlendMode.srcIn),
                                 ),
                               ),
@@ -305,29 +305,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(height: 30),
                                 TextField(
                                   controller: _textController,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: AppColors.textoOscuro,
                                     fontWeight: FontWeight.w500,
                                   ),
                                   decoration: InputDecoration(
                                     hintText: l10n.home_hint_text,
                                     hintStyle: TextStyle(
-                                      color: AppColors.rosaFuerte.withOpacity(0.8),
+                                      color: AppColors.rosaFuerte.withValues(alpha: 0.8),
                                     ),
                                     filled: true,
                                     fillColor: AppColors.naranjaPiel,
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(50),
-                                        borderSide: const BorderSide(
+                                        borderSide: BorderSide(
                                             color: AppColors.rosaFuerte, width: 2)),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(50),
-                                        borderSide: const BorderSide(
+                                        borderSide: BorderSide(
                                             color: AppColors.rosaFuerte, width: 2)),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(50),
                                       borderSide: BorderSide(
-                                          color: AppColors.rosaFuerte.withOpacity(0.5),
+                                          color: AppColors.rosaFuerte.withValues(alpha: 0.5),
                                           width: 2),
                                     ),
                                   ),
@@ -388,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }),
           iconTheme: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.selected)) {
-              return const IconThemeData(color: AppColors.textoOscuro, size: 26);
+              return IconThemeData(color: AppColors.textoOscuro, size: 26);
             }
             return IconThemeData(
                 color: AppColors.textoOscuro.withValues(alpha: 0.6), size: 24);

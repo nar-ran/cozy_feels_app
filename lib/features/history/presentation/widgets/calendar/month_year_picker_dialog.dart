@@ -85,7 +85,7 @@ class _MonthYearPickerDialogState extends State<MonthYearPickerDialog> {
                   padding: const EdgeInsets.symmetric(horizontal: 18.0),
                   child: Text(
                     '$_selectedYear',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Dongle',
                       fontSize: 34,
                       fontWeight: FontWeight.bold,
@@ -184,7 +184,7 @@ class _MonthYearPickerDialogState extends State<MonthYearPickerDialog> {
                                 Container(
                                   width: 5,
                                   height: 5,
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     color: AppColors.rosaFuerte,
                                     shape: BoxShape.circle,
                                   ),
@@ -238,7 +238,7 @@ class _MonthYearPickerDialogState extends State<MonthYearPickerDialog> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.today_rounded,
                           color: AppColors.textoOscuro,
                           size: 18,
@@ -246,7 +246,7 @@ class _MonthYearPickerDialogState extends State<MonthYearPickerDialog> {
                         const SizedBox(width: 6),
                         Text(
                           l10n.calendar_today_button,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'Dongle',
                             fontSize: 22,
                             color: AppColors.textoOscuro,
@@ -289,7 +289,7 @@ class _MonthYearPickerDialogState extends State<MonthYearPickerDialog> {
       splashRadius: 22,
       icon: Container(
         padding: const EdgeInsets.all(5),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.naranjaPiel,
           shape: BoxShape.circle,
         ),

@@ -56,4 +56,17 @@ class MoodStorageService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_onboardingKey, true);
   }
+
+  // --- THEME ---
+  static const String _themeKey = 'selected_theme_id';
+
+  Future<void> saveTheme(String themeId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_themeKey, themeId);
+  }
+
+  Future<String?> loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_themeKey);
+  }
 }

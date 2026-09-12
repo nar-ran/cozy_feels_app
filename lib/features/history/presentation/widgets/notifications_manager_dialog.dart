@@ -7,7 +7,7 @@ import 'package:cozy_feels_app/features/history/domain/services/reminder_storage
 import 'package:cozy_feels_app/features/history/domain/services/notification_service.dart';
 
 class NotificationsManagerDialog extends StatefulWidget {
-  const NotificationsManagerDialog({Key? key}) : super(key: key);
+  const NotificationsManagerDialog({super.key});
 
   @override
   State<NotificationsManagerDialog> createState() =>
@@ -96,7 +96,9 @@ class _NotificationsManagerDialogState
       _isFormExpanded = false;
       _selectedHour = 20;
       _selectedMinute = 0;
-      for (int i = 0; i < _selectedDays.length; i++) _selectedDays[i] = true;
+      for (int i = 0; i < _selectedDays.length; i++) {
+        _selectedDays[i] = true;
+      }
     });
 
     await _storageService.saveReminders(_remindersList);
@@ -176,7 +178,7 @@ class _NotificationsManagerDialogState
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.add_alarm,
+                          Icon(Icons.add_alarm,
                               color: AppColors.textoOscuro, size: 22),
                           const SizedBox(width: 10),
                           Text(
@@ -296,7 +298,7 @@ class _NotificationsManagerDialogState
               ],
 
               const SizedBox(height: 25),
-              const Divider(color: AppColors.textoOscuro, thickness: 1.5),
+              Divider(color: AppColors.textoOscuro, thickness: 1.5),
               const SizedBox(height: 15),
 
               // --- LISTA DE RECORDATORIOS ---
@@ -306,7 +308,7 @@ class _NotificationsManagerDialogState
                       child: Text(
                         i10n.notifications_no_reminders,
                         style: TextStyle(
-                            color: AppColors.textoOscuro.withOpacity(0.5),
+                            color: AppColors.textoOscuro.withValues(alpha: 0.5),
                             fontSize: width * 0.04,
                             fontStyle: FontStyle.italic),
                       ),
@@ -351,7 +353,7 @@ class _NotificationsManagerDialogState
                                       style: TextStyle(
                                         fontSize: width * 0.035,
                                         color: AppColors.textoOscuro
-                                            .withOpacity(0.7),
+                                            .withValues(alpha: 0.7),
                                       ),
                                     ),
                                   ],
@@ -359,7 +361,7 @@ class _NotificationsManagerDialogState
                               ),
                               GestureDetector(
                                 onTap: () => _deleteReminderAction(index),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.delete_outline,
                                   color: AppColors.textoOscuro,
                                   size: 26,

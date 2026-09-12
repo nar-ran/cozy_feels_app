@@ -110,5 +110,15 @@
   "calendar_day_friday": "Fri",
   "calendar_day_saturday": "Sat",
   "calendar_select_month": "Select Month",
-  "calendar_today_button": "Go to current month"
+  "calendar_today_button": "Go to current month",
+
+  "sectionTheme": "========== THEME SELECTOR ==========",
+  "settings_theme_title": "Color Themes",
+  "settings_theme_subtitle": "Customize the app appearance",
+  "theme_dialog_title": "Color Palettes",
+  "theme_name_cozy_classic": "Cozy Classic",
+  "theme_name_noche_calida": "Warm Night",
+  "theme_name_matcha_zen": "Matcha Zen",
+  "theme_name_tonos_tierra": "Earth Tones",
+  "theme_name_niebla_lavanda": "Lavender Mist"
 }

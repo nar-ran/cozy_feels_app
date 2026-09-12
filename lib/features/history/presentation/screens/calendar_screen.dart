@@ -162,7 +162,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     child: SvgPicture.asset(
                       AppAssets.featureIcons['Settings']!,
                       width: 28,
-                      colorFilter: const ColorFilter.mode(
+                      colorFilter: ColorFilter.mode(
                           AppColors.textoOscuro, BlendMode.srcIn),
                     ),
                   ),

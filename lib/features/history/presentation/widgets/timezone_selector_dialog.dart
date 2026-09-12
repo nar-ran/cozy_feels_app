@@ -135,7 +135,7 @@ class TimezoneSelectorDialog extends StatelessWidget {
                                     color: isSelected
                                         ? Colors.white70
                                         : AppColors.textoOscuro
-                                            .withOpacity(0.7),
+                                            .withValues(alpha: 0.7),
                                   ),
                                 ),
                               ],

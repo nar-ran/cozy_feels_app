@@ -115,5 +115,15 @@
   "calendar_day_friday": "Vie",
   "calendar_day_saturday": "Sáb",
   "calendar_select_month": "Seleccionar Mes",
-  "calendar_today_button": "Ir al mes actual"
+  "calendar_today_button": "Ir al mes actual",
+
+  "sectionTheme": "========== SELECTOR DE TEMA ==========",
+  "settings_theme_title": "Temas de Color",
+  "settings_theme_subtitle": "Personaliza la apariencia de la app",
+  "theme_dialog_title": "Paletas de Color",
+  "theme_name_cozy_classic": "Cozy Classic",
+  "theme_name_noche_calida": "Noche Cálida",
+  "theme_name_matcha_zen": "Matcha Zen",
+  "theme_name_tonos_tierra": "Tonos Tierra",
+  "theme_name_niebla_lavanda": "Niebla Lavanda"
 }

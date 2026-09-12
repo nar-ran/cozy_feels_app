@@ -58,7 +58,7 @@ class CalendarMonthHeader extends StatelessWidget {
                     children: [
                       Text(
                         monthYearText,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Dongle',
                           fontSize: 34,
                           fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class CalendarMonthHeader extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 2),
-                      const Icon(
+                      Icon(
                         Icons.keyboard_arrow_down_rounded,
                         color: AppColors.textoOscuro,
                         size: 26,
@@ -94,7 +94,7 @@ class CalendarMonthHeader extends StatelessWidget {
                 child: Center(
                   child: Text(
                     day,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Dongle',
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -121,7 +121,7 @@ class CalendarMonthHeader extends StatelessWidget {
       tooltip: tooltip,
       icon: Container(
         padding: const EdgeInsets.all(6),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.naranjaPiel,
           shape: BoxShape.circle,
         ),

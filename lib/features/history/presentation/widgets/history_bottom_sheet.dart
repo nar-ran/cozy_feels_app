@@ -31,9 +31,9 @@ class HistoryBottomSheet extends StatelessWidget {
       maxChildSize: 0.9,
       builder: (context, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.naranjaPiel,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
           ),
           child: CustomScrollView(
             controller: scrollController,
@@ -122,7 +122,7 @@ class HistoryBottomSheet extends StatelessWidget {
                                       getFixedPath(entry.emojiPath),
                                       width: emojiSize,
                                       height: emojiSize,
-                                      colorFilter: const ColorFilter.mode(
+                                      colorFilter: ColorFilter.mode(
                                           AppColors.textoOscuro,
                                           BlendMode.srcIn),
                                     ),
@@ -131,7 +131,7 @@ class HistoryBottomSheet extends StatelessWidget {
                                         child: Container(
                                           width: 2,
                                           color: AppColors.textoOscuro
-                                              .withOpacity(0.5),
+                                              .withValues(alpha: 0.5),
                                         ),
                                       ),
                                   ],
@@ -160,7 +160,7 @@ class HistoryBottomSheet extends StatelessWidget {
                                           style: TextStyle(
                                               fontSize: width * 0.055,
                                               color: AppColors.textoOscuro
-                                                  .withOpacity(0.7),
+                                                  .withValues(alpha: 0.7),
                                               height: 1.1),
                                         ),
                                       ],

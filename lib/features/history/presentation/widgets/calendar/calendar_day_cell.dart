@@ -29,15 +29,15 @@ class CalendarDayCell extends StatelessWidget {
     if (hasEntry) {
       backgroundColor = AppColors.naranjaPiel;
       border = Border.all(
-        color: isToday ? AppColors.rosaFuerte : AppColors.rosaFuerte.withOpacity(0.4),
+        color: isToday ? AppColors.rosaFuerte : AppColors.rosaFuerte.withValues(alpha: 0.4),
         width: isToday ? 2.0 : 1.2,
       );
     } else if (isToday) {
-      backgroundColor = Colors.white.withOpacity(0.5);
+      backgroundColor = Colors.white.withValues(alpha: 0.5);
       border = Border.all(color: AppColors.rosaFuerte, width: 2.0);
     } else if (isCurrentMonth) {
-      backgroundColor = Colors.white.withOpacity(0.2);
-      border = Border.all(color: AppColors.textoOscuro.withOpacity(0.12), width: 1.0);
+      backgroundColor = Colors.white.withValues(alpha: 0.2);
+      border = Border.all(color: AppColors.textoOscuro.withValues(alpha: 0.12), width: 1.0);
     } else {
       backgroundColor = Colors.transparent;
       border = null;
@@ -97,7 +97,7 @@ class CalendarDayCell extends StatelessWidget {
                 fixedEmojiPath,
                 width: 24,
                 height: 24,
-                colorFilter: const ColorFilter.mode(
+                colorFilter: ColorFilter.mode(
                   AppColors.textoOscuro,
                   BlendMode.srcIn,
                 ),
@@ -107,7 +107,7 @@ class CalendarDayCell extends StatelessWidget {
               Container(
                 width: 5,
                 height: 5,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.rosaFuerte,
                   shape: BoxShape.circle,
                 ),

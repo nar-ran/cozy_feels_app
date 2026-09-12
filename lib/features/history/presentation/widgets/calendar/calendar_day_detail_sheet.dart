@@ -79,9 +79,9 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(25, 12, 25, 25),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.naranjaPiel,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
       ),
       child: SafeArea(
         top: false,
@@ -121,7 +121,7 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
                 _getFixedPath(_currentEntry!.emojiPath),
                 width: 64,
                 height: 64,
-                colorFilter: const ColorFilter.mode(
+                colorFilter: ColorFilter.mode(
                   AppColors.textoOscuro,
                   BlendMode.srcIn,
                 ),
@@ -165,7 +165,7 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.edit_rounded,
                           color: AppColors.textoOscuro,
                           size: 18,
@@ -173,7 +173,7 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
                         const SizedBox(width: 8),
                         Text(
                           l10n.calendar_edit_entry,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'Dongle',
                             fontSize: 24,
                             fontWeight: FontWeight.bold,

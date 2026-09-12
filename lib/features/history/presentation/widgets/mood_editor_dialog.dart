@@ -107,7 +107,7 @@ class _MoodEditorDialogState extends State<MoodEditorDialog> {
                         padding: EdgeInsets.all(width * 0.01),
                         child: SvgPicture.asset(
                           e.value,
-                          colorFilter: const ColorFilter.mode(
+                          colorFilter: ColorFilter.mode(
                             AppColors.textoOscuro,
                             BlendMode.srcIn,
                           ),

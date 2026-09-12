@@ -31,7 +31,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
     final width = MediaQuery.of(context).size.width;
 
     return Container(
-      color: AppColors.fondoSoft.withOpacity(0.89),
+      color: AppColors.fondoSoft.withValues(alpha: 0.89),
       width: double.infinity,
       height: double.infinity,
       child: SafeArea(
@@ -60,10 +60,10 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 decoration: BoxDecoration(
-                  color: AppColors.rosaFuerte.withOpacity(0.60),
+                  color: AppColors.rosaFuerte.withValues(alpha: 0.60),
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(
-                      color: AppColors.textoOscuro.withOpacity(0.3),
+                      color: AppColors.textoOscuro.withValues(alpha: 0.3),
                       width: 1.5),
                 ),
                 child: Text(
@@ -120,7 +120,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
       child: Row(
         children: [
           Icon(icon,
-              color: AppColors.rosaFuerte.withOpacity(0.8), size: width * 0.1),
+              color: AppColors.rosaFuerte.withValues(alpha: 0.8), size: width * 0.1),
           const SizedBox(width: 20),
           Expanded(
             child: Text(

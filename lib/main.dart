@@ -1,3 +1,4 @@
+import 'package:cozy_feels_app/core/theme/theme_controller.dart';
 import 'package:cozy_feels_app/features/history/domain/services/mood_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cozy_feels_app/features/history/presentation/screens/home_screen.dart';
@@ -36,6 +37,9 @@ void main() async {
 
   final notificationService = NotificationService();
   await notificationService.initNotification();
+
+  // Inicializar tema guardado
+  await ThemeController.instance.init();
 
   runApp(const CozyFeelsApp());
 }
@@ -81,16 +85,18 @@ class _CozyFeelsAppState extends State<CozyFeelsApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: _locale,
-      theme: ThemeData(
-        fontFamily: 'Dongle',
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
+    return ListenableBuilder(
+      listenable: ThemeController.instance,
+      builder: (context, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: _locale,
+          theme: ThemeController.instance.themeData,
+          home: const HomeScreen(),
+        );
+      },
     );
   }
 }

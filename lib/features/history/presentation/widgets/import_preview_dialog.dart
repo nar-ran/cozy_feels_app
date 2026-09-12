@@ -84,7 +84,7 @@ class ImportPreviewDialog extends StatelessWidget {
                           color: AppColors.naranjaPiel,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                              color: AppColors.rosaFuerte.withOpacity(0.5),
+                              color: AppColors.rosaFuerte.withValues(alpha: 0.5),
                               width: 1),
                         ),
                         child: Row(
@@ -95,7 +95,7 @@ class ImportPreviewDialog extends StatelessWidget {
                               child: entry.emojiPath.contains('.svg')
                                   ? SvgPicture.asset(
                                       entry.emojiPath,
-                                      colorFilter: const ColorFilter.mode(
+                                      colorFilter: ColorFilter.mode(
                                         AppColors.textoOscuro,
                                         BlendMode.srcIn,
                                       ),
@@ -135,7 +135,7 @@ class ImportPreviewDialog extends StatelessWidget {
                                     }(),
                                     style: TextStyle(
                                       color: AppColors.textoOscuro
-                                          .withOpacity(0.6),
+                                          .withValues(alpha: 0.6),
                                       fontSize: width * 0.03,
                                     ),
                                   ),
@@ -154,7 +154,7 @@ class ImportPreviewDialog extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: AppColors.rosaFuerte.withOpacity(0.1),
+                    color: AppColors.rosaFuerte.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Text(
@@ -178,7 +178,7 @@ class ImportPreviewDialog extends StatelessWidget {
                       l10n.common_cancel,
                       style: TextStyle(
                         fontSize: width * 0.05,
-                        color: AppColors.textoOscuro.withOpacity(0.5),
+                        color: AppColors.textoOscuro.withValues(alpha: 0.5),
                         fontWeight: FontWeight.bold,
                       ),
                     ),

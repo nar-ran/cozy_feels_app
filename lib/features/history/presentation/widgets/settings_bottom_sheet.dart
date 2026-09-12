@@ -1,5 +1,7 @@
+import 'package:cozy_feels_app/core/theme/theme_controller.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/language_selector_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/notifications_manager_dialog.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/theme_selector_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:cozy_feels_app/core/constants/app_assets.dart';
@@ -21,9 +23,9 @@ class SettingsBottomSheet extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(25),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.naranjaPiel,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -57,6 +59,26 @@ class SettingsBottomSheet extends StatelessWidget {
 
           const SizedBox(height: 15),
 
+          ListenableBuilder(
+            listenable: ThemeController.instance,
+            builder: (context, _) {
+              return _buildOption(
+                icon: AppAssets.featureIcons['Palette']!,
+                title: l10n.settings_theme_title,
+                subtitle: ThemeController.instance.currentPalette
+                    .getLocalizedName(l10n),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const ThemeSelectorDialog(),
+                  );
+                },
+              );
+            },
+          ),
+
+          const SizedBox(height: 15),
+
           _buildOption(
             icon: AppAssets.featureIcons['Notifications']!,
             title: l10n.settings_notifications_title,
@@ -64,7 +86,7 @@ class SettingsBottomSheet extends StatelessWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => NotificationsManagerDialog(),
+                builder: (context) => const NotificationsManagerDialog(),
               );
             },
           ),
@@ -101,12 +123,12 @@ class SettingsBottomSheet extends StatelessWidget {
       leading: SvgPicture.asset(icon,
           width: 30,
           colorFilter:
-              const ColorFilter.mode(AppColors.rosaFuerte, BlendMode.srcIn)),
+              ColorFilter.mode(AppColors.rosaFuerte, BlendMode.srcIn)),
       title: Text(title,
-          style: const TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.bold, color: AppColors.textoOscuro)),
       subtitle: Text(subtitle,
-          style: TextStyle(color: AppColors.textoOscuro.withOpacity(0.6))),
+          style: TextStyle(color: AppColors.textoOscuro.withValues(alpha: 0.6))),
     );
   }
 }
