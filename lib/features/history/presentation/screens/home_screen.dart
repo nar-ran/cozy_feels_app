@@ -5,6 +5,7 @@ import 'package:cozy_feels_app/l10n/app_localizations.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
 import 'package:cozy_feels_app/features/history/domain/services/backup_service.dart';
 import 'package:cozy_feels_app/features/history/domain/services/mood_storage_service.dart';
+import 'package:cozy_feels_app/features/history/presentation/screens/calendar_screen.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/history_bottom_sheet.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/import_preview_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/mood_editor_dialog.dart';
@@ -30,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final MoodStorageService _storage = MoodStorageService();
 
   final TextEditingController _textController = TextEditingController();
+  final PageController _pageController = PageController();
+  int _currentTabIndex = 0;
   final List<HistoryEntry> _myHistory = [];
   final emojis = AppAssets.sentimentEmojis.entries.toList();
   String _selectedTimezone = 'America/New_York';
@@ -39,6 +42,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     tz.initializeTimeZones();
     _initData();
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    _pageController.dispose();
+    super.dispose();
   }
 
   Future<void> _initData() async {
@@ -235,110 +245,183 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColors.fondoSoft,
       body: Stack(
         children: [
-          SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () => _showSettings(context),
-                        child: SvgPicture.asset(
-                          AppAssets.featureIcons['Settings']!,
-                          width: 28,
-                          colorFilter: const ColorFilter.mode(
-                              AppColors.textoOscuro, BlendMode.srcIn),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: _showTimezoneDialog,
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: Text(
-                            formattedDate,
-                            style: TextStyle(
-                              color: AppColors.rosaFuerte,
-                              fontSize: width * 0.08,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35.0),
+          PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() => _currentTabIndex = index);
+            },
+            children: [
+              // Vista 1: Registro Diario e Historial
+              Stack(
+                children: [
+                  SafeArea(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 40),
-                        Text(
-                            l10n.home_title,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: width * 0.15,
-                                color: AppColors.textoOscuro,
-                                height: 0.8)),
-                        const SizedBox(height: 30),
-                        TextField(
-                          controller: _textController,
-                          style: const TextStyle(
-                            color: AppColors.textoOscuro,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: l10n.home_hint_text,
-                            hintStyle: TextStyle(
-                              color: AppColors.rosaFuerte.withOpacity(0.8),
-                            ),
-                            filled: true,
-                            fillColor: AppColors.naranjaPiel,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50),
-                                borderSide: const BorderSide(
-                                    color: AppColors.rosaFuerte, width: 2)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50),
-                                borderSide: const BorderSide(
-                                    color: AppColors.rosaFuerte, width: 2)),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50),
-                              borderSide: BorderSide(
-                                  color: AppColors.rosaFuerte.withOpacity(0.5),
-                                  width: 2),
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () => _showSettings(context),
+                                child: SvgPicture.asset(
+                                  AppAssets.featureIcons['Settings']!,
+                                  width: 28,
+                                  colorFilter: const ColorFilter.mode(
+                                      AppColors.textoOscuro, BlendMode.srcIn),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: _showTimezoneDialog,
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: Text(
+                                    formattedDate,
+                                    style: TextStyle(
+                                      color: AppColors.rosaFuerte,
+                                      fontSize: width * 0.08,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 30),
-                        StrokeText(
-                            text: l10n.home_no_words_question,
-                            fontSize: width * 0.12,
-                            color: AppColors.rosaFuerte,
-                            strokeColor: AppColors.textoOscuro),
                         Expanded(
-                          child: MoodSelectorGrid(
-                            emojis: emojis,
-                            onEmojiSelected: _saveMood,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 40),
+                                Text(
+                                    l10n.home_title,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: width * 0.15,
+                                        color: AppColors.textoOscuro,
+                                        height: 0.8)),
+                                const SizedBox(height: 30),
+                                TextField(
+                                  controller: _textController,
+                                  style: const TextStyle(
+                                    color: AppColors.textoOscuro,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: l10n.home_hint_text,
+                                    hintStyle: TextStyle(
+                                      color: AppColors.rosaFuerte.withOpacity(0.8),
+                                    ),
+                                    filled: true,
+                                    fillColor: AppColors.naranjaPiel,
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                        borderSide: const BorderSide(
+                                            color: AppColors.rosaFuerte, width: 2)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                        borderSide: const BorderSide(
+                                            color: AppColors.rosaFuerte, width: 2)),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                      borderSide: BorderSide(
+                                          color: AppColors.rosaFuerte.withOpacity(0.5),
+                                          width: 2),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 30),
+                                StrokeText(
+                                    text: l10n.home_no_words_question,
+                                    fontSize: width * 0.12,
+                                    color: AppColors.rosaFuerte,
+                                    strokeColor: AppColors.textoOscuro),
+                                Expanded(
+                                  child: MoodSelectorGrid(
+                                    emojis: emojis,
+                                    onEmojiSelected: _saveMood,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          HistoryBottomSheet(
-            entries: _myHistory,
-            selectedTimezone: _selectedTimezone,
-            onEdit: (index, entry) => _showEditDialog(index, entry),
+                  HistoryBottomSheet(
+                    entries: _myHistory,
+                    selectedTimezone: _selectedTimezone,
+                    onEdit: (index, entry) => _showEditDialog(index, entry),
+                  ),
+                ],
+              ),
+
+              // Vista 2: Calendario
+              CalendarScreen(
+                entries: _myHistory,
+                selectedTimezone: _selectedTimezone,
+                onEdit: (index, entry) => _showEditDialog(index, entry),
+                onOpenSettings: () => _showSettings(context),
+                onTimezoneTap: _showTimezoneDialog,
+              ),
+            ],
           ),
           if (_showOnboarding) OnboardingOverlay(onFinish: _closeOnboarding),
         ],
+      ),
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          indicatorColor: AppColors.rosaFuerte.withValues(alpha: 0.35),
+          labelTextStyle: WidgetStateProperty.resolveWith((states) {
+            return TextStyle(
+              fontFamily: 'Dongle',
+              fontSize: 22,
+              fontWeight: states.contains(WidgetState.selected)
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+              color: AppColors.textoOscuro,
+              height: 0.9,
+            );
+          }),
+          iconTheme: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return const IconThemeData(color: AppColors.textoOscuro, size: 26);
+            }
+            return IconThemeData(
+                color: AppColors.textoOscuro.withValues(alpha: 0.6), size: 24);
+          }),
+        ),
+        child: NavigationBar(
+          height: 65,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: AppColors.naranjaPiel,
+          selectedIndex: _currentTabIndex,
+          onDestinationSelected: (index) {
+            setState(() => _currentTabIndex = index);
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+          destinations: [
+            NavigationDestination(
+              icon: const Icon(Icons.edit_note_rounded),
+              selectedIcon: const Icon(Icons.edit_note_rounded),
+              label: l10n.nav_daily,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.calendar_month_rounded),
+              selectedIcon: const Icon(Icons.calendar_month_rounded),
+              label: l10n.nav_calendar,
+            ),
+          ],
+        ),
       ),
     );
   }

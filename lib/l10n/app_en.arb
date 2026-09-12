@@ -90,5 +90,25 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "sectionNavigation": "========== NAVIGATION ==========",
+  "nav_daily": "Daily",
+  "nav_calendar": "Calendar",
+
+  "sectionCalendar": "========== CALENDAR ==========",
+  "calendar_title": "Calendar",
+  "calendar_no_entry_day": "No entries on this day",
+  "calendar_edit_entry": "Edit entry",
+  "calendar_prev_month": "Previous month",
+  "calendar_next_month": "Next month",
+  "calendar_day_sunday": "Sun",
+  "calendar_day_monday": "Mon",
+  "calendar_day_tuesday": "Tue",
+  "calendar_day_wednesday": "Wed",
+  "calendar_day_thursday": "Thu",
+  "calendar_day_friday": "Fri",
+  "calendar_day_saturday": "Sat",
+  "calendar_select_month": "Select Month",
+  "calendar_today_button": "Go to current month"
 }

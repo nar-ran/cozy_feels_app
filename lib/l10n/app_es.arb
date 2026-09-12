@@ -95,5 +95,25 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "sectionNavigation": "========== NAVEGACIÓN ==========",
+  "nav_daily": "Diario",
+  "nav_calendar": "Calendario",
+
+  "sectionCalendar": "========== CALENDARIO ==========",
+  "calendar_title": "Calendario",
+  "calendar_no_entry_day": "Sin registros en este día",
+  "calendar_edit_entry": "Editar registro",
+  "calendar_prev_month": "Mes anterior",
+  "calendar_next_month": "Mes siguiente",
+  "calendar_day_sunday": "Dom",
+  "calendar_day_monday": "Lun",
+  "calendar_day_tuesday": "Mar",
+  "calendar_day_wednesday": "Mié",
+  "calendar_day_thursday": "Jue",
+  "calendar_day_friday": "Vie",
+  "calendar_day_saturday": "Sáb",
+  "calendar_select_month": "Seleccionar Mes",
+  "calendar_today_button": "Ir al mes actual"
 }
