@@ -157,7 +157,7 @@ class _NotificationsManagerDialogState
                 text: i10n.notifications_title,
                 fontSize: width * 0.08,
                 color: AppColors.rosaFuerte,
-                strokeColor: AppColors.textoOscuro,
+                strokeColor: AppColors.strokeColor,
               ),
 
               const SizedBox(height: 25),

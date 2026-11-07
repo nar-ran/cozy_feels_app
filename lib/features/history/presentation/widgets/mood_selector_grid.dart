@@ -29,7 +29,7 @@ class MoodSelectorGrid extends StatelessWidget {
             child: SvgPicture.asset(
               emoji.value,
               colorFilter: ColorFilter.mode(
-                  AppColors.textoOscuro, BlendMode.srcIn),
+                  AppColors.emojiColor, BlendMode.srcIn),
             ),
           ),
         );

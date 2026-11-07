@@ -67,7 +67,7 @@ class _MonthYearPickerDialogState extends State<MonthYearPickerDialog> {
               text: l10n.calendar_select_month,
               fontSize: width * 0.08,
               color: AppColors.rosaFuerte,
-              strokeColor: AppColors.textoOscuro,
+              strokeColor: AppColors.strokeColor,
             ),
             const SizedBox(height: 12),
 

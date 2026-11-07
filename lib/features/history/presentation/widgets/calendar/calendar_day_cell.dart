@@ -98,7 +98,7 @@ class CalendarDayCell extends StatelessWidget {
                 width: 24,
                 height: 24,
                 colorFilter: ColorFilter.mode(
-                  AppColors.textoOscuro,
+                  AppColors.emojiColor,
                   BlendMode.srcIn,
                 ),
               ),

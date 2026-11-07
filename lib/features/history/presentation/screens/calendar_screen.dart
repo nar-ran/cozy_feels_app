@@ -190,7 +190,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               text: l10n.calendar_title,
               fontSize: width * 0.15,
               color: AppColors.rosaFuerte,
-              strokeColor: AppColors.textoOscuro,
+              strokeColor: AppColors.strokeColor,
             ),
 
             // Month Navigation & Weekday labels

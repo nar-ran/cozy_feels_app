@@ -42,7 +42,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
               text: l10n.onboarding_guide_step(_stepIndex, 3),
               fontSize: width * 0.08,
               color: AppColors.rosaFuerte,
-              strokeColor: AppColors.textoOscuro,
+              strokeColor: AppColors.strokeColor,
             ),
             const SizedBox(height: 40),
 

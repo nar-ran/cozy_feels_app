@@ -117,8 +117,9 @@
   "settings_theme_subtitle": "Customize the app appearance",
   "theme_dialog_title": "Color Palettes",
   "theme_name_cozy_classic": "Cozy Classic",
-  "theme_name_noche_calida": "Warm Night",
+  "theme_name_noche_calida": "Midnight Blue",
+  "theme_name_cafe_medianoche": "Midnight Mocha",
   "theme_name_matcha_zen": "Matcha Zen",
-  "theme_name_tonos_tierra": "Earth Tones",
-  "theme_name_niebla_lavanda": "Lavender Mist"
+  "theme_name_tonos_tierra": "Olive & Mocha",
+  "theme_name_niebla_lavanda": "Cotton Candy"
 }

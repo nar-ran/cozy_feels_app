@@ -22,93 +22,107 @@ class SettingsBottomSheet extends StatelessWidget {
     final currentLocale = Localizations.localeOf(context);
 
     return Container(
-      padding: const EdgeInsets.all(25),
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.85,
+      ),
       decoration: BoxDecoration(
         color: AppColors.naranjaPiel,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Handle
-          Container(
-              width: 50,
-              height: 5,
-              decoration: BoxDecoration(
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(25, 14, 25, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle
+              Container(
+                width: 50,
+                height: 5,
+                decoration: BoxDecoration(
                   color: AppColors.fondoSoft,
-                  borderRadius: BorderRadius.circular(10))),
-          
-          const SizedBox(height: 25),
-          _buildOption(
-            icon: AppAssets.featureIcons['Language'] ??
-                AppAssets.featureIcons['Translate']!,
-            title: l10n.settings_language,
-            subtitle: l10n.settings_current_language_label,
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) => LanguageSelectorDialog(
-                  currentLocale: currentLocale,
-                  onLocaleSelected: (newLocale) {
-                    CozyFeelsApp.setLocale(context, newLocale);
-                  },
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              );
-            },
-          ),
+              ),
 
-          const SizedBox(height: 15),
+              const SizedBox(height: 18),
 
-          ListenableBuilder(
-            listenable: ThemeController.instance,
-            builder: (context, _) {
-              return _buildOption(
-                icon: AppAssets.featureIcons['Palette']!,
-                title: l10n.settings_theme_title,
-                subtitle: ThemeController.instance.currentPalette
-                    .getLocalizedName(l10n),
+              _buildOption(
+                icon: AppAssets.featureIcons['Language'] ??
+                    AppAssets.featureIcons['Translate']!,
+                title: l10n.settings_language,
+                subtitle: l10n.settings_current_language_label,
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (context) => const ThemeSelectorDialog(),
+                    builder: (context) => LanguageSelectorDialog(
+                      currentLocale: currentLocale,
+                      onLocaleSelected: (newLocale) {
+                        CozyFeelsApp.setLocale(context, newLocale);
+                      },
+                    ),
                   );
                 },
-              );
-            },
+              ),
+
+              const SizedBox(height: 8),
+
+              ListenableBuilder(
+                listenable: ThemeController.instance,
+                builder: (context, _) {
+                  return _buildOption(
+                    icon: AppAssets.featureIcons['Palette']!,
+                    title: l10n.settings_theme_title,
+                    subtitle: ThemeController.instance.currentPalette
+                        .getLocalizedName(l10n),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ThemeSelectorDialog(),
+                      );
+                    },
+                  );
+                },
+              ),
+
+              const SizedBox(height: 8),
+
+              _buildOption(
+                icon: AppAssets.featureIcons['Notifications']!,
+                title: l10n.settings_notifications_title,
+                subtitle: l10n.settings_notifications_subtitle,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const NotificationsManagerDialog(),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 8),
+
+              _buildOption(
+                icon: AppAssets.featureIcons['Upload']!,
+                title: l10n.settings_export_title,
+                subtitle: l10n.settings_export_subtitle,
+                onTap: onExport,
+              ),
+
+              const SizedBox(height: 8),
+
+              _buildOption(
+                icon: AppAssets.featureIcons['Restore']!,
+                title: l10n.settings_import_title,
+                subtitle: l10n.settings_import_subtitle,
+                onTap: onImport,
+              ),
+
+              const SizedBox(height: 16),
+            ],
           ),
-
-          const SizedBox(height: 15),
-
-          _buildOption(
-            icon: AppAssets.featureIcons['Notifications']!,
-            title: l10n.settings_notifications_title,
-            subtitle: l10n.settings_notifications_subtitle,
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) => const NotificationsManagerDialog(),
-              );
-            },
-          ),
-
-          const SizedBox(height: 15),
-          _buildOption(
-            icon: AppAssets.featureIcons['Upload']!,
-            title: l10n.settings_export_title,
-            subtitle: l10n.settings_export_subtitle,
-            onTap: onExport,
-          ),
-
-          const SizedBox(height: 15),
-          _buildOption(
-            icon: AppAssets.featureIcons['Restore']!,
-            title: l10n.settings_import_title,
-            subtitle: l10n.settings_import_subtitle,
-            onTap: onImport,
-          ),
-
-          const SizedBox(height: 30),
-        ],
+        ),
       ),
     );
   }
@@ -120,8 +134,10 @@ class SettingsBottomSheet extends StatelessWidget {
       required VoidCallback onTap}) {
     return ListTile(
       onTap: onTap,
+      dense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
       leading: SvgPicture.asset(icon,
-          width: 30,
+          width: 28,
           colorFilter:
               ColorFilter.mode(AppColors.rosaFuerte, BlendMode.srcIn)),
       title: Text(title,

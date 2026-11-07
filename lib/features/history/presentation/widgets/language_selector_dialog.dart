@@ -40,7 +40,7 @@ class LanguageSelectorDialog extends StatelessWidget {
               text: i10n.language_title,
               fontSize: width * 0.08,
               color: AppColors.rosaFuerte,
-              strokeColor: AppColors.textoOscuro,
+              strokeColor: AppColors.strokeColor,
             ),
             const SizedBox(height: 20),
             Column(

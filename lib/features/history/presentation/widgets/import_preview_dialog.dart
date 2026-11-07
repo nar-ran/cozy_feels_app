@@ -52,7 +52,7 @@ class ImportPreviewDialog extends StatelessWidget {
                 text: l10n.import_preview_title,
                 fontSize: width * 0.08,
                 color: AppColors.rosaFuerte,
-                strokeColor: AppColors.textoOscuro,
+                strokeColor: AppColors.strokeColor,
               ),
               const SizedBox(height: 25),
               Text(
@@ -96,7 +96,7 @@ class ImportPreviewDialog extends StatelessWidget {
                                   ? SvgPicture.asset(
                                       entry.emojiPath,
                                       colorFilter: ColorFilter.mode(
-                                        AppColors.textoOscuro,
+                                        AppColors.emojiColor,
                                         BlendMode.srcIn,
                                       ),
                                     )

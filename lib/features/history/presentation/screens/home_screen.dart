@@ -162,6 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => SettingsBottomSheet(
         onExport: () async {
@@ -337,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     text: l10n.home_no_words_question,
                                     fontSize: width * 0.12,
                                     color: AppColors.rosaFuerte,
-                                    strokeColor: AppColors.textoOscuro),
+                                    strokeColor: AppColors.strokeColor),
                                 Expanded(
                                   child: MoodSelectorGrid(
                                     emojis: emojis,

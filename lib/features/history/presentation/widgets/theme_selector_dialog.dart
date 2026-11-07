@@ -31,97 +31,103 @@ class ThemeSelectorDialog extends StatelessWidget {
               text: l10n.theme_dialog_title,
               fontSize: width * 0.08,
               color: AppColors.rosaFuerte,
-              strokeColor: AppColors.textoOscuro,
+              strokeColor: AppColors.strokeColor,
             ),
             const SizedBox(height: 18),
-            ListenableBuilder(
-              listenable: themeController,
-              builder: (context, _) {
-                final currentId = themeController.currentThemeId;
+            Flexible(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: ListenableBuilder(
+                  listenable: themeController,
+                  builder: (context, _) {
+                    final currentId = themeController.currentThemeId;
 
-                return Column(
-                  children: AppPalettes.all.values.map((palette) {
-                    final isSelected = palette.id == currentId;
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: AppPalettes.all.values.map((palette) {
+                        final isSelected = palette.id == currentId;
 
-                    return GestureDetector(
-                      onTap: () {
-                        themeController.setTheme(palette.id);
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 6),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.naranjaPiel
-                              : AppColors.naranjaPiel.withValues(alpha: 0.65),
-                          borderRadius: BorderRadius.circular(22),
-                          border: Border.all(
-                            color: isSelected
-                                ? AppColors.rosaFuerte
-                                : AppColors.rosaFuerte.withValues(alpha: 0.3),
-                            width: isSelected ? 2.5 : 1.0,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            // Theme name
-                            Expanded(
-                              child: Text(
-                                palette.getLocalizedName(l10n),
-                                style: TextStyle(
-                                  fontFamily: 'Dongle',
-                                  fontSize: 26,
-                                  fontWeight: isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  color: isSelected
-                                      ? AppColors.rosaFuerte
-                                      : AppColors.textoOscuro,
-                                  height: 1.0,
-                                ),
+                        return GestureDetector(
+                          onTap: () {
+                            themeController.setTheme(palette.id);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.naranjaPiel
+                                  : AppColors.naranjaPiel.withValues(alpha: 0.65),
+                              borderRadius: BorderRadius.circular(22),
+                              border: Border.all(
+                                color: isSelected
+                                    ? AppColors.rosaFuerte
+                                    : AppColors.rosaFuerte.withValues(alpha: 0.3),
+                                width: isSelected ? 2.5 : 1.0,
                               ),
                             ),
-
-                            // 4 Color Preview Circles
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: palette.previewColors.map((c) {
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 2),
-                                  width: 16,
-                                  height: 16,
-                                  decoration: BoxDecoration(
-                                    color: c,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: palette.textoOscuro.withValues(alpha: 0.25),
-                                      width: 1,
+                            child: Row(
+                              children: [
+                                // Theme name
+                                Expanded(
+                                  child: Text(
+                                    palette.getLocalizedName(l10n),
+                                    style: TextStyle(
+                                      fontFamily: 'Dongle',
+                                      fontSize: 26,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: isSelected
+                                          ? AppColors.rosaFuerte
+                                          : AppColors.textoOscuro,
+                                      height: 1.0,
                                     ),
                                   ),
-                                );
-                              }).toList(),
-                            ),
+                                ),
 
-                            const SizedBox(width: 8),
+                                // 4 Color Preview Circles
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: palette.previewColors.map((c) {
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                                      width: 16,
+                                      height: 16,
+                                      decoration: BoxDecoration(
+                                        color: c,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: palette.textoOscuro.withValues(alpha: 0.25),
+                                          width: 1,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
 
-                            // Selected checkmark or placeholder
-                            Icon(
-                              isSelected
-                                  ? Icons.check_circle_rounded
-                                  : Icons.circle_outlined,
-                              color: isSelected
-                                  ? AppColors.rosaFuerte
-                                  : AppColors.textoOscuro.withValues(alpha: 0.3),
-                              size: 22,
+                                const SizedBox(width: 8),
+
+                                // Selected checkmark or placeholder
+                                Icon(
+                                  isSelected
+                                      ? Icons.check_circle_rounded
+                                      : Icons.circle_outlined,
+                                  color: isSelected
+                                      ? AppColors.rosaFuerte
+                                      : AppColors.textoOscuro.withValues(alpha: 0.3),
+                                  size: 22,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      }).toList(),
                     );
-                  }).toList(),
-                );
-              },
+                  },
+                ),
+              ),
             ),
             const SizedBox(height: 14),
             TextButton(

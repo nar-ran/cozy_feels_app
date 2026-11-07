@@ -9,5 +9,7 @@ class AppColors {
   static Color get naranjaPiel => current.naranjaPiel;
   static Color get rosaFuerte => current.rosaFuerte;
   static Color get textoOscuro => current.textoOscuro;
+  static Color get strokeColor => current.strokeColor;
   static Color get grisHandle => current.grisHandle;
+  static Color get emojiColor => current.resolvedEmojiColor;
 }

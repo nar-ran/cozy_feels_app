@@ -56,7 +56,7 @@ class HistoryBottomSheet extends StatelessWidget {
                         text: l10n.history_title,
                         fontSize: width * 0.12,
                         color: AppColors.rosaFuerte,
-                        strokeColor: AppColors.textoOscuro,
+                        strokeColor: AppColors.strokeColor,
                       ),
                     ),
                   ],
@@ -123,7 +123,7 @@ class HistoryBottomSheet extends StatelessWidget {
                                       width: emojiSize,
                                       height: emojiSize,
                                       colorFilter: ColorFilter.mode(
-                                          AppColors.textoOscuro,
+                                          AppColors.emojiColor,
                                           BlendMode.srcIn),
                                     ),
                                     if (index != entries.length - 1)

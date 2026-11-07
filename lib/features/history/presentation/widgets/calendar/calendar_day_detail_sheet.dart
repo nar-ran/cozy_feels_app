@@ -122,7 +122,7 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
                 width: 64,
                 height: 64,
                 colorFilter: ColorFilter.mode(
-                  AppColors.textoOscuro,
+                  AppColors.emojiColor,
                   BlendMode.srcIn,
                 ),
               ),

@@ -80,7 +80,7 @@ class _MoodEditorDialogState extends State<MoodEditorDialog> {
                 text: formattedDate,
                 fontSize: width * 0.08,
                 color: AppColors.rosaFuerte,
-                strokeColor: AppColors.textoOscuro,
+                strokeColor: AppColors.strokeColor,
               ),
               const SizedBox(height: 25),
 
@@ -108,7 +108,7 @@ class _MoodEditorDialogState extends State<MoodEditorDialog> {
                         child: SvgPicture.asset(
                           e.value,
                           colorFilter: ColorFilter.mode(
-                            AppColors.textoOscuro,
+                            AppColors.emojiColor,
                             BlendMode.srcIn,
                           ),
                         ),
