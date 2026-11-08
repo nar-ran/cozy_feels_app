@@ -1,3 +1,5 @@
+import 'package:cozy_feels_app/core/security/security_service.dart';
+import 'package:cozy_feels_app/core/security/widgets/lock_screen.dart';
 import 'package:cozy_feels_app/core/theme/theme_controller.dart';
 import 'package:cozy_feels_app/features/history/domain/services/mood_storage_service.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +43,9 @@ void main() async {
   // Inicializar tema guardado
   await ThemeController.instance.init();
 
+  // Inicializar servicio de seguridad (PIN y Biometría)
+  await SecurityService.instance.init();
+
   runApp(const CozyFeelsApp());
 }
 
@@ -57,13 +62,30 @@ class CozyFeelsApp extends StatefulWidget {
   State<CozyFeelsApp> createState() => _CozyFeelsAppState();
 }
 
-class _CozyFeelsAppState extends State<CozyFeelsApp> {
+class _CozyFeelsAppState extends State<CozyFeelsApp>
+    with WidgetsBindingObserver {
   Locale _locale = const Locale('en');
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadSavedLocale();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      SecurityService.instance.lock();
+    }
   }
 
   void _loadSavedLocale() async {
@@ -95,6 +117,22 @@ class _CozyFeelsAppState extends State<CozyFeelsApp> {
           locale: _locale,
           theme: ThemeController.instance.themeData,
           home: const HomeScreen(),
+          builder: (context, child) {
+            return ListenableBuilder(
+              listenable: SecurityService.instance,
+              builder: (context, _) {
+                return Stack(
+                  children: [
+                    if (child != null) child,
+                    if (SecurityService.instance.isLocked)
+                      const Positioned.fill(
+                        child: LockScreen(),
+                      ),
+                  ],
+                );
+              },
+            );
+          },
         );
       },
     );

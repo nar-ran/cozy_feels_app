@@ -3,6 +3,7 @@ import 'package:cozy_feels_app/features/history/presentation/widgets/language_se
 import 'package:cozy_feels_app/features/history/presentation/widgets/notifications_manager_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/theme_selector_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/tags/manage_tags_dialog.dart';
+import 'package:cozy_feels_app/core/security/widgets/security_settings_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:cozy_feels_app/core/constants/app_assets.dart';
@@ -97,6 +98,24 @@ class SettingsBottomSheet extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) => const NotificationsManagerDialog(),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 8),
+
+              _buildOption(
+                iconWidget: Icon(
+                  Icons.lock_outline_rounded,
+                  size: 28,
+                  color: AppColors.rosaFuerte,
+                ),
+                title: l10n.settings_security_title,
+                subtitle: l10n.settings_security_subtitle,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const SecuritySettingsDialog(),
                   );
                 },
               ),
