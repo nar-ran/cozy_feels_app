@@ -1,3 +1,4 @@
+import 'package:cozy_feels_app/features/history/presentation/widgets/tags/tag_selector_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
@@ -9,14 +10,16 @@ class MoodEditorDialog extends StatefulWidget {
   final DateTime date;
   final String initialMessage;
   final String initialEmoji;
+  final List<String> initialTags;
   final List<MapEntry<String, String>> emojis;
-  final Function(String message, String emoji) onSave;
+  final Function(String message, String emoji, List<String> tags) onSave;
 
   const MoodEditorDialog({
     super.key,
     required this.date,
     required this.initialMessage,
     required this.initialEmoji,
+    this.initialTags = const [],
     required this.emojis,
     required this.onSave,
   });
@@ -28,12 +31,14 @@ class MoodEditorDialog extends StatefulWidget {
 class _MoodEditorDialogState extends State<MoodEditorDialog> {
   late TextEditingController _controller;
   late String _selectedEmoji;
+  late List<String> _selectedTags;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.initialMessage);
     _selectedEmoji = _findMatchingEmoji(widget.initialEmoji);
+    _selectedTags = List<String>.from(widget.initialTags);
   }
 
   String _findMatchingEmoji(String path) {
@@ -145,11 +150,22 @@ class _MoodEditorDialogState extends State<MoodEditorDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 18),
 
-              // 4. Botón Guardar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TagSelectorRow(
+                  selectedTags: _selectedTags,
+                  onTagsChanged: (tags) {
+                    setState(() => _selectedTags = tags);
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+
               GestureDetector(
-                onTap: () => widget.onSave(_controller.text, _selectedEmoji),
+                onTap: () => widget.onSave(
+                    _controller.text, _selectedEmoji, _selectedTags),
                 child: Text(
                   l10n.editor_save_button,
                   style: TextStyle(

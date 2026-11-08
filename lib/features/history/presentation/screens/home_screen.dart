@@ -15,6 +15,7 @@ import 'package:cozy_feels_app/features/history/presentation/widgets/mood_select
 import 'package:cozy_feels_app/features/history/presentation/widgets/onboarding_overlay.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/settings_bottom_sheet.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/timezone_selector_dialog.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/tags/tag_selector_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -38,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<HistoryEntry> _myHistory = [];
   final emojis = AppAssets.sentimentEmojis.entries.toList();
   String _selectedTimezone = 'America/New_York';
+  List<String> _selectedTags = [];
 
   @override
   void initState() {
@@ -96,12 +98,14 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _showOnboarding = false);
   }
 
-  void _updateHistoryEntry(int index, String newMessage, String newEmoji) {
+  void _updateHistoryEntry(
+      int index, String newMessage, String newEmoji, List<String> newTags) {
     setState(() {
       _myHistory[index] = HistoryEntry(
         date: _myHistory[index].date,
         message: newMessage,
         emojiPath: newEmoji,
+        tags: newTags,
       );
     });
     _saveHistory();
@@ -139,8 +143,10 @@ class _HomeScreenState extends State<HomeScreen> {
             date: now,
             message: _textController.text,
             emojiPath: selectedEmojiPath,
+            tags: List<String>.from(_selectedTags),
           ));
       _textController.clear();
+      _selectedTags.clear();
     });
     _saveHistory();
     FocusScope.of(context).unfocus();
@@ -168,9 +174,10 @@ class _HomeScreenState extends State<HomeScreen> {
         date: entry.date,
         initialMessage: entry.message,
         initialEmoji: entry.emojiPath,
+        initialTags: entry.tags,
         emojis: emojis,
-        onSave: (msg, emoji) {
-          _updateHistoryEntry(index, msg, emoji);
+        onSave: (msg, emoji, tags) {
+          _updateHistoryEntry(index, msg, emoji, tags);
           Navigator.pop(context);
         },
       ),
@@ -341,62 +348,72 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 35.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 40),
-                                Text(
-                                    l10n.home_title,
-                                    textAlign: TextAlign.center,
+                          child: SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(height: 20),
+                                  Text(
+                                      l10n.home_title,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: width * 0.15,
+                                          color: AppColors.textoOscuro,
+                                          height: 0.8)),
+                                  const SizedBox(height: 22),
+                                  TextField(
+                                    controller: _textController,
                                     style: TextStyle(
-                                        fontSize: width * 0.15,
-                                        color: AppColors.textoOscuro,
-                                        height: 0.8)),
-                                const SizedBox(height: 30),
-                                TextField(
-                                  controller: _textController,
-                                  style: TextStyle(
-                                    color: AppColors.textoOscuro,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  decoration: InputDecoration(
-                                    hintText: l10n.home_hint_text,
-                                    hintStyle: TextStyle(
-                                      color: AppColors.rosaFuerte.withValues(alpha: 0.8),
+                                      color: AppColors.textoOscuro,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    filled: true,
-                                    fillColor: AppColors.naranjaPiel,
-                                    border: OutlineInputBorder(
+                                    decoration: InputDecoration(
+                                      hintText: l10n.home_hint_text,
+                                      hintStyle: TextStyle(
+                                        color: AppColors.rosaFuerte.withValues(alpha: 0.8),
+                                      ),
+                                      filled: true,
+                                      fillColor: AppColors.naranjaPiel,
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50),
+                                          borderSide: BorderSide(
+                                              color: AppColors.rosaFuerte, width: 2)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50),
+                                          borderSide: BorderSide(
+                                              color: AppColors.rosaFuerte, width: 2)),
+                                      focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(50),
                                         borderSide: BorderSide(
-                                            color: AppColors.rosaFuerte, width: 2)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                        borderSide: BorderSide(
-                                            color: AppColors.rosaFuerte, width: 2)),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      borderSide: BorderSide(
-                                          color: AppColors.rosaFuerte.withValues(alpha: 0.5),
-                                          width: 2),
+                                            color: AppColors.rosaFuerte.withValues(alpha: 0.5),
+                                            width: 2),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 30),
-                                StrokeText(
-                                    text: l10n.home_no_words_question,
-                                    fontSize: width * 0.12,
-                                    color: AppColors.rosaFuerte,
-                                    strokeColor: AppColors.strokeColor),
-                                Expanded(
-                                  child: MoodSelectorGrid(
+                                  const SizedBox(height: 14),
+                                  TagSelectorRow(
+                                    selectedTags: _selectedTags,
+                                    onTagsChanged: (tags) {
+                                      setState(() => _selectedTags = tags);
+                                    },
+                                  ),
+                                  const SizedBox(height: 16),
+                                  StrokeText(
+                                      text: l10n.home_no_words_question,
+                                      fontSize: width * 0.12,
+                                      color: AppColors.rosaFuerte,
+                                      strokeColor: AppColors.strokeColor),
+                                  const SizedBox(height: 12),
+                                  MoodSelectorGrid(
                                     emojis: emojis,
                                     onEmojiSelected: _saveMood,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 140),
+                                ],
+                              ),
                             ),
                           ),
                         ),

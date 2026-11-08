@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:cozy_feels_app/core/theme/app_colors.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/mood_editor_dialog.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/tags/tag_chip.dart';
 import 'package:cozy_feels_app/l10n/app_localizations.dart';
 
 class CalendarDayDetailSheet extends StatefulWidget {
@@ -48,12 +49,14 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
         date: widget.date,
         initialMessage: _currentEntry!.message,
         initialEmoji: _currentEntry!.emojiPath,
+        initialTags: _currentEntry!.tags,
         emojis: widget.emojis,
-        onSave: (newMessage, newEmoji) {
+        onSave: (newMessage, newEmoji, newTags) {
           final updated = HistoryEntry(
             date: _currentEntry!.date,
             message: newMessage,
             emojiPath: newEmoji,
+            tags: newTags,
           );
           setState(() {
             _currentEntry = updated;
@@ -149,6 +152,17 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
                   textAlign: TextAlign.center,
                 ),
               ),
+              if (_currentEntry!.tags.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  alignment: WrapAlignment.center,
+                  children: _currentEntry!.tags
+                      .map((t) => TagChip(tagId: t, isCompact: true))
+                      .toList(),
+                ),
+              ],
               const SizedBox(height: 18),
 
               // Cozy Edit Button matching app aesthetics (opens dialog on top without closing sheet)

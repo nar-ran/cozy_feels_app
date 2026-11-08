@@ -149,5 +149,41 @@
   "theme_name_cafe_medianoche": "Midnight Mocha",
   "theme_name_matcha_zen": "Matcha Zen",
   "theme_name_tonos_tierra": "Olive & Mocha",
-  "theme_name_niebla_lavanda": "Cotton Candy"
+  "theme_name_niebla_lavanda": "Cotton Candy",
+
+  "sectionTags": "========== CONTEXT TAGS ==========",
+  "tag_section_title": "Context",
+  "tag_work": "Work",
+  "tag_relationship": "Relationship",
+  "tag_family": "Family",
+  "tag_sleep": "Sleep",
+  "tag_study": "Study",
+  "tag_health": "Health",
+  "tag_leisure": "Leisure",
+  "tag_social": "Social",
+  "tag_add_new": "New tag",
+  "tag_dialog_title": "New Tag",
+  "tag_dialog_hint": "e.g. Pets, Workout...",
+  "tag_dialog_add": "Add",
+  "tag_dialog_already_exists": "This tag already exists",
+  "tag_manage_title": "Manage Tags",
+  "tag_manage_subtitle": "Drag to reorder or delete tags",
+  "tag_manage_empty": "No active tags",
+  "tag_delete_confirm_title": "Delete tag?",
+  "tag_delete_confirm_message": "Are you sure you want to delete the tag \"{tagName}\"?",
+  "@tag_delete_confirm_message": {
+    "placeholders": {
+      "tagName": {
+        "type": "String"
+      }
+    }
+  },
+  "tag_delete_btn": "Delete",
+  "tag_manage_tooltip": "Manage tags",
+  "tag_reset_defaults": "Reset default tags",
+  "tag_reset_confirm_title": "Reset tags?",
+  "tag_reset_confirm_message": "Do you want to restore the original list and order of tags?",
+  "tag_restore_available": "Available default tags to restore:",
+  "settings_tags_title": "Tags",
+  "settings_tags_subtitle": "Customize and reorder tags"
 }

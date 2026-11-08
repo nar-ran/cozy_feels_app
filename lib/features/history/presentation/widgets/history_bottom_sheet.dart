@@ -4,6 +4,7 @@ import 'package:cozy_feels_app/core/theme/app_colors.dart';
 import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
 import 'package:intl/intl.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/tags/tag_chip.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:cozy_feels_app/l10n/app_localizations.dart';
 
@@ -26,8 +27,8 @@ class HistoryBottomSheet extends StatelessWidget {
     final double emojiSize = width * 0.1;
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.3,
-      minChildSize: 0.15,
+      initialChildSize: 0.18,
+      minChildSize: 0.14,
       maxChildSize: 0.9,
       builder: (context, scrollController) {
         return Container(
@@ -163,6 +164,18 @@ class HistoryBottomSheet extends StatelessWidget {
                                                   .withValues(alpha: 0.7),
                                               height: 1.1),
                                         ),
+                                        if (entry.tags.isNotEmpty) ...[
+                                          const SizedBox(height: 6),
+                                          Wrap(
+                                            spacing: 5,
+                                            runSpacing: 4,
+                                            children: entry.tags
+                                                .map((t) => TagChip(
+                                                    tagId: t,
+                                                    isCompact: true))
+                                                .toList(),
+                                          ),
+                                        ],
                                       ],
                                     ),
                                   ),

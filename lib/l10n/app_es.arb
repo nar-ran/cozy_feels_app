@@ -154,5 +154,41 @@
   "theme_name_cafe_medianoche": "Café Medianoche",
   "theme_name_matcha_zen": "Matcha Zen",
   "theme_name_tonos_tierra": "Oliva & Moca",
-  "theme_name_niebla_lavanda": "Algodón de Azúcar"
+  "theme_name_niebla_lavanda": "Algodón de Azúcar",
+
+  "sectionTags": "========== ETIQUETAS DE CONTEXTO ==========",
+  "tag_section_title": "Contexto",
+  "tag_work": "Trabajo",
+  "tag_relationship": "Pareja",
+  "tag_family": "Familia",
+  "tag_sleep": "Sueño",
+  "tag_study": "Estudio",
+  "tag_health": "Salud",
+  "tag_leisure": "Ocio",
+  "tag_social": "Social",
+  "tag_add_new": "Nueva etiqueta",
+  "tag_dialog_title": "Nueva Etiqueta",
+  "tag_dialog_hint": "Ej. Mascotas, Gym...",
+  "tag_dialog_add": "Agregar",
+  "tag_dialog_already_exists": "Esta etiqueta ya existe",
+  "tag_manage_title": "Gestionar Etiquetas",
+  "tag_manage_subtitle": "Arrastra para reordenar o elimina etiquetas",
+  "tag_manage_empty": "No tienes etiquetas activas",
+  "tag_delete_confirm_title": "¿Eliminar etiqueta?",
+  "tag_delete_confirm_message": "¿Deseas eliminar la etiqueta \"{tagName}\"?",
+  "@tag_delete_confirm_message": {
+    "placeholders": {
+      "tagName": {
+        "type": "String"
+      }
+    }
+  },
+  "tag_delete_btn": "Eliminar",
+  "tag_manage_tooltip": "Gestionar etiquetas",
+  "tag_reset_defaults": "Restablecer predeterminadas",
+  "tag_reset_confirm_title": "¿Restablecer etiquetas?",
+  "tag_reset_confirm_message": "¿Deseas restaurar la lista y orden original de etiquetas?",
+  "tag_restore_available": "Predeterminadas para restaurar:",
+  "settings_tags_title": "Etiquetas",
+  "settings_tags_subtitle": "Personalizar y ordenar etiquetas"
 }

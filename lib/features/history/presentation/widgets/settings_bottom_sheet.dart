@@ -2,6 +2,7 @@ import 'package:cozy_feels_app/core/theme/theme_controller.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/language_selector_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/notifications_manager_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/theme_selector_dialog.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/tags/manage_tags_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:cozy_feels_app/core/constants/app_assets.dart';
@@ -50,26 +51,7 @@ class SettingsBottomSheet extends StatelessWidget {
 
               const SizedBox(height: 18),
 
-              _buildOption(
-                icon: AppAssets.featureIcons['Language'] ??
-                    AppAssets.featureIcons['Translate']!,
-                title: l10n.settings_language,
-                subtitle: l10n.settings_current_language_label,
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => LanguageSelectorDialog(
-                      currentLocale: currentLocale,
-                      onLocaleSelected: (newLocale) {
-                        CozyFeelsApp.setLocale(context, newLocale);
-                      },
-                    ),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 8),
-
+              
               ListenableBuilder(
                 listenable: ThemeController.instance,
                 builder: (context, _) {
@@ -84,6 +66,23 @@ class SettingsBottomSheet extends StatelessWidget {
                         builder: (context) => const ThemeSelectorDialog(),
                       );
                     },
+                  );
+                },
+              ),
+
+              const SizedBox(height: 8),
+              _buildOption(
+                iconWidget: Icon(
+                  Icons.label_outline_rounded,
+                  size: 28,
+                  color: AppColors.rosaFuerte,
+                ),
+                title: l10n.settings_tags_title,
+                subtitle: l10n.settings_tags_subtitle,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const ManageTagsDialog(),
                   );
                 },
               ),
@@ -114,6 +113,26 @@ class SettingsBottomSheet extends StatelessWidget {
                 },
               ),
 
+              const SizedBox(height: 8),
+
+              _buildOption(
+                icon: AppAssets.featureIcons['Language'] ??
+                    AppAssets.featureIcons['Translate']!,
+                title: l10n.settings_language,
+                subtitle: l10n.settings_current_language_label,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => LanguageSelectorDialog(
+                      currentLocale: currentLocale,
+                      onLocaleSelected: (newLocale) {
+                        CozyFeelsApp.setLocale(context, newLocale);
+                      },
+                    ),
+                  );
+                },
+              ),
+
               const SizedBox(height: 16),
             ],
           ),
@@ -122,19 +141,22 @@ class SettingsBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildOption(
-      {required String icon,
-      required String title,
-      required String subtitle,
-      required VoidCallback onTap}) {
+  Widget _buildOption({
+    String? icon,
+    Widget? iconWidget,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
     return ListTile(
       onTap: onTap,
       dense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-      leading: SvgPicture.asset(icon,
-          width: 28,
-          colorFilter:
-              ColorFilter.mode(AppColors.rosaFuerte, BlendMode.srcIn)),
+      leading: iconWidget ??
+          SvgPicture.asset(icon!,
+              width: 28,
+              colorFilter:
+                  ColorFilter.mode(AppColors.rosaFuerte, BlendMode.srcIn)),
       title: Text(title,
           style: TextStyle(
               fontWeight: FontWeight.bold, color: AppColors.textoOscuro)),

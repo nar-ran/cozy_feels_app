@@ -14,6 +14,7 @@ class MoodSelectorGrid extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     return GridView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
         mainAxisSpacing: 10,
