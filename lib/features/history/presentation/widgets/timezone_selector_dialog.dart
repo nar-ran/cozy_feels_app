@@ -60,7 +60,7 @@ class TimezoneSelectorDialog extends StatelessWidget {
               text: i10n.timezone_title,
               fontSize: width * 0.08,
               color: AppColors.rosaFuerte,
-              strokeColor: AppColors.textoOscuro,
+              strokeColor: AppColors.strokeColor,
             ),
             const SizedBox(height: 20),
             Flexible(
@@ -135,7 +135,7 @@ class TimezoneSelectorDialog extends StatelessWidget {
                                     color: isSelected
                                         ? Colors.white70
                                         : AppColors.textoOscuro
-                                            .withOpacity(0.7),
+                                            .withValues(alpha: 0.7),
                                   ),
                                 ),
                               ],

@@ -28,6 +28,26 @@
   "history_empty_state": "No entries yet...",
   "history_no_words": "No words today...",
   "history_delete_confirm": "Delete this memory?",
+  "history_search_hint": "Search notes and memories...",
+  "history_filter_all": "All",
+  "history_filter_this_week": "This week",
+  "history_filter_this_month": "This month",
+  "history_filter_custom_date": "Date range",
+  "history_filter_clear": "Clear filters",
+  "history_filter_results_count": "{filtered} of {total} memories",
+  "@history_filter_results_count": {
+    "placeholders": {
+      "filtered": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "history_filter_no_results": "No memories found with these filters",
+  "history_filter_select_mood": "Mood",
+  "history_filter_select_tag": "Tag",
 
   "notificationsSettings": "========== NOTIFICATIONS ==========",
   "notifications_title": "Notifications",
@@ -42,6 +62,34 @@
   "settings_export_subtitle": "Save your history to a file",
   "settings_import_title": "Import Backup",
   "settings_import_subtitle": "Restore your feelings from a file",
+  "settings_backup_center_title": "Backup & Data",
+  "settings_backup_center_subtitle": "Google Drive, export and import",
+  "backup_center_dialog_title": "Backup & Data",
+  "backup_cloud_title": "Google Drive",
+  "backup_cloud_desc": "Privately back up your memories in your personal Google Drive.",
+  "backup_cloud_connect": "Connect with Google",
+  "backup_cloud_disconnect": "Disconnect",
+  "backup_cloud_sync_now": "Sync Now",
+  "backup_cloud_restore": "Restore",
+  "backup_cloud_auto_sync": "Auto-backup when opening app",
+  "backup_cloud_last_backup": "Last backup: {time}",
+  "@backup_cloud_last_backup": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "backup_cloud_no_backup": "No cloud backup yet",
+  "backup_cloud_syncing": "Syncing with Google Drive...",
+  "backup_cloud_sync_success": "Cloud backup completed successfully!",
+  "backup_cloud_restore_success": "Memories restored from cloud!",
+  "backup_cloud_no_remote_file": "No backup file found in your Google Drive.",
+  "backup_local_title": "File Backups",
+  "backup_local_export": "Export JSON file",
+  "backup_local_export_subtitle": "Save or share your history",
+  "backup_local_import": "Import JSON file",
+  "backup_local_import_subtitle": "Restore memories from a local file",
   "settings_language": "Language",
   "settings_current_language_label": "English",
   "settings_import_success": "Memories imported successfully!",
@@ -90,5 +138,123 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "sectionNavigation": "========== NAVIGATION ==========",
+  "nav_daily": "Daily",
+  "nav_calendar": "Calendar",
+  "nav_stats": "Stats",
+
+  "sectionCalendar": "========== CALENDAR ==========",
+  "calendar_title": "Calendar",
+  "calendar_no_entry_day": "No entries on this day",
+  "calendar_edit_entry": "Edit entry",
+  "calendar_prev_month": "Previous month",
+  "calendar_next_month": "Next month",
+  "calendar_day_sunday": "Sun",
+  "calendar_day_monday": "Mon",
+  "calendar_day_tuesday": "Tue",
+  "calendar_day_wednesday": "Wed",
+  "calendar_day_thursday": "Thu",
+  "calendar_day_friday": "Fri",
+  "calendar_day_saturday": "Sat",
+  "calendar_select_month": "Select Month",
+  "calendar_today_button": "Go to current month",
+
+  "sectionTheme": "========== THEME SELECTOR ==========",
+  "settings_theme_title": "Color Themes",
+  "settings_theme_subtitle": "Customize the app appearance",
+  "theme_dialog_title": "Color Palettes",
+  "theme_name_cozy_classic": "Cozy Classic",
+  "theme_name_noche_calida": "Midnight Blue",
+  "theme_name_cafe_medianoche": "Midnight Mocha",
+  "theme_name_matcha_zen": "Matcha Zen",
+  "theme_name_tonos_tierra": "Olive & Mocha",
+  "theme_name_niebla_lavanda": "Cotton Candy",
+
+  "sectionTags": "========== CONTEXT TAGS ==========",
+  "tag_section_title": "Context",
+  "tag_work": "Work",
+  "tag_relationship": "Relationship",
+  "tag_family": "Family",
+  "tag_sleep": "Sleep",
+  "tag_study": "Study",
+  "tag_health": "Health",
+  "tag_leisure": "Leisure",
+  "tag_social": "Social",
+  "tag_add_new": "New tag",
+  "tag_dialog_title": "New Tag",
+  "tag_dialog_hint": "e.g. Pets, Workout...",
+  "tag_dialog_add": "Add",
+  "tag_dialog_already_exists": "This tag already exists",
+  "tag_manage_title": "Manage Tags",
+  "tag_manage_subtitle": "Drag to reorder or delete tags",
+  "tag_manage_empty": "No active tags",
+  "tag_delete_confirm_title": "Delete tag?",
+  "tag_delete_confirm_message": "Are you sure you want to delete the tag \"{tagName}\"?",
+  "@tag_delete_confirm_message": {
+    "placeholders": {
+      "tagName": {
+        "type": "String"
+      }
+    }
+  },
+  "tag_delete_btn": "Delete",
+  "tag_manage_tooltip": "Manage tags",
+  "tag_reset_defaults": "Reset default tags",
+  "tag_reset_confirm_title": "Reset tags?",
+  "tag_reset_confirm_message": "Do you want to restore the original list and order of tags?",
+  "tag_restore_available": "Available default tags to restore:",
+  "settings_tags_title": "Tags",
+  "settings_tags_subtitle": "Customize and reorder tags",
+
+  "sectionSecurity": "========== SECURITY AND PRIVACY ==========",
+  "settings_security_title": "Security & Privacy",
+  "settings_security_subtitle": "4-Digit PIN App Lock",
+  "security_dialog_title": "Security",
+  "security_enable_lock": "App Lock",
+  "security_enable_lock_desc": "Require PIN when opening app",
+  "security_biometrics": "Biometric Unlock",
+  "security_biometrics_desc": "Use fingerprint or facial recognition",
+  "security_change_pin": "Change PIN",
+  "security_setup_pin_title": "Create 4-Digit PIN",
+  "security_create_pin_desc": "Enter a 4-digit PIN",
+  "security_confirm_pin_title": "Confirm PIN",
+  "security_enter_current_pin": "Enter your current PIN",
+  "security_enter_new_pin": "Enter your new 4-digit PIN",
+  "security_reenter_pin": "Re-enter PIN to confirm",
+  "security_pin_mismatch": "PINs do not match. Try again.",
+  "security_pin_updated": "PIN set up successfully",
+  "security_unlock_title": "Protected Journal",
+  "security_enter_pin": "Enter your PIN to unlock",
+  "security_incorrect_pin": "Incorrect PIN",
+  "security_biometric_reason": "Unlock Cozy Feels to view your journal",
+  "security_biometrics_not_available": "Biometrics not available on this device",
+
+  "sectionStats": "========== METRICS AND STATS ==========",
+  "stats_title": "Statistics",
+  "stats_period_week": "Week",
+  "stats_period_month": "Month",
+  "stats_period_all": "All Time",
+  "stats_streak_title": "Daily Streak",
+  "stats_streak_current": "Current streak",
+  "stats_streak_record": "Best streak",
+  "stats_streak_days": "{count, plural, =1{1 day} other{{count} days}}",
+  "@stats_streak_days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stats_streak_motivational_zero": "Log how you feel today to start your streak!",
+  "stats_streak_motivational_active": "Great consistency! Every entry counts towards your well-being.",
+  "stats_streak_motivational_great": "Amazing streak! You are very consistent with your journal.",
+  "stats_total_entries": "Total entries",
+  "stats_dominant_mood": "Dominant emotion",
+  "stats_mood_distribution": "Emotional Balance",
+  "stats_top_tags": "Top context tags",
+  "stats_no_tags": "No tags in this period",
+  "stats_empty_title": "No entries in this period",
+  "stats_empty_subtitle": "Log how you feel today to discover patterns in your emotional well-being!"
 }

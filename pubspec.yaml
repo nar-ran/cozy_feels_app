@@ -1,6 +1,6 @@
 name: cozy_feels_app
 description: "A new Flutter project."
-version: 1.0.0+5
+version: 2.0.0+8
 environment:
   sdk: ^3.5.4
 
@@ -21,6 +21,9 @@ dependencies:
   file_selector_android: ^0.5.2+6
   flutter_local_notifications: ^20.1.0
   flutter_timezone: ^5.1.0
+  google_sign_in: ^6.2.2
+  googleapis: ^13.2.0
+  extension_google_sign_in_as_googleapis_auth: ^2.0.12
 
 dev_dependencies:
   flutter_test:

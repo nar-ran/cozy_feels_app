@@ -19,6 +19,8 @@ local.properties
 *.aab
 *.jks
 *.keystore
+key/
+client_secret*.json
 
 # Archivos de iOS
 .mtl

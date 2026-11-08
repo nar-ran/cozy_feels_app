@@ -28,6 +28,26 @@
   "history_empty_state": "Sin entradas aún...",
   "history_no_words": "Sin palabras hoy...",
   "history_delete_confirm": "¿Eliminar este recuerdo?",
+  "history_search_hint": "Buscar en notas y recuerdos...",
+  "history_filter_all": "Todos",
+  "history_filter_this_week": "Esta semana",
+  "history_filter_this_month": "Este mes",
+  "history_filter_custom_date": "Rango de fechas",
+  "history_filter_clear": "Limpiar filtros",
+  "history_filter_results_count": "{filtered} de {total} recuerdos",
+  "@history_filter_results_count": {
+    "placeholders": {
+      "filtered": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "history_filter_no_results": "No se encontraron recuerdos con estos filtros",
+  "history_filter_select_mood": "Emoción",
+  "history_filter_select_tag": "Etiqueta",
 
   "notificationsSettings": "========== NOTIFICACIONES ==========",
   "notifications_title": "Notificaciones",
@@ -42,6 +62,34 @@
   "settings_export_subtitle": "Guarda tu historial en un archivo",
   "settings_import_title": "Importar Respaldo",
   "settings_import_subtitle": "Restaura tus sentimientos desde un archivo",
+  "settings_backup_center_title": "Copia de Seguridad",
+  "settings_backup_center_subtitle": "Google Drive, exportar e importar",
+  "backup_center_dialog_title": "Copia de Seguridad",
+  "backup_cloud_title": "Google Drive",
+  "backup_cloud_desc": "Guarda tus recuerdos de forma privada en tu cuenta personal de Google Drive.",
+  "backup_cloud_connect": "Conectar con Google",
+  "backup_cloud_disconnect": "Desconectar",
+  "backup_cloud_sync_now": "Sincronizar ahora",
+  "backup_cloud_restore": "Restaurar",
+  "backup_cloud_auto_sync": "Copia automática al abrir la app",
+  "backup_cloud_last_backup": "Última copia: {time}",
+  "@backup_cloud_last_backup": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "backup_cloud_no_backup": "Sin copias en la nube aún",
+  "backup_cloud_syncing": "Sincronizando con Google Drive...",
+  "backup_cloud_sync_success": "¡Copia de seguridad en la nube completada!",
+  "backup_cloud_restore_success": "¡Recuerdos restaurados desde la nube!",
+  "backup_cloud_no_remote_file": "No se encontró ningún archivo de respaldo en tu Google Drive.",
+  "backup_local_title": "Respaldos en Archivo",
+  "backup_local_export": "Exportar archivo JSON",
+  "backup_local_export_subtitle": "Guarda o comparte tu historial",
+  "backup_local_import": "Importar archivo JSON",
+  "backup_local_import_subtitle": "Restaura recuerdos desde un archivo local",
   "settings_language": "Idioma",
   "settings_current_language_label": "Español",
   "settings_import_success": "¡Recuerdos importados con éxito!",
@@ -95,5 +143,123 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "sectionNavigation": "========== NAVEGACIÓN ==========",
+  "nav_daily": "Diario",
+  "nav_calendar": "Calendario",
+  "nav_stats": "Estadísticas",
+
+  "sectionCalendar": "========== CALENDARIO ==========",
+  "calendar_title": "Calendario",
+  "calendar_no_entry_day": "Sin registros en este día",
+  "calendar_edit_entry": "Editar registro",
+  "calendar_prev_month": "Mes anterior",
+  "calendar_next_month": "Mes siguiente",
+  "calendar_day_sunday": "Dom",
+  "calendar_day_monday": "Lun",
+  "calendar_day_tuesday": "Mar",
+  "calendar_day_wednesday": "Mié",
+  "calendar_day_thursday": "Jue",
+  "calendar_day_friday": "Vie",
+  "calendar_day_saturday": "Sáb",
+  "calendar_select_month": "Seleccionar Mes",
+  "calendar_today_button": "Ir al mes actual",
+
+  "sectionTheme": "========== SELECTOR DE TEMA ==========",
+  "settings_theme_title": "Temas de Color",
+  "settings_theme_subtitle": "Personaliza la apariencia de la app",
+  "theme_dialog_title": "Paletas de Color",
+  "theme_name_cozy_classic": "Cozy Classic",
+  "theme_name_noche_calida": "Azul Medianoche",
+  "theme_name_cafe_medianoche": "Café Medianoche",
+  "theme_name_matcha_zen": "Matcha Zen",
+  "theme_name_tonos_tierra": "Oliva & Moca",
+  "theme_name_niebla_lavanda": "Algodón de Azúcar",
+
+  "sectionTags": "========== ETIQUETAS DE CONTEXTO ==========",
+  "tag_section_title": "Contexto",
+  "tag_work": "Trabajo",
+  "tag_relationship": "Pareja",
+  "tag_family": "Familia",
+  "tag_sleep": "Sueño",
+  "tag_study": "Estudio",
+  "tag_health": "Salud",
+  "tag_leisure": "Ocio",
+  "tag_social": "Social",
+  "tag_add_new": "Nueva etiqueta",
+  "tag_dialog_title": "Nueva Etiqueta",
+  "tag_dialog_hint": "Ej. Mascotas, Gym...",
+  "tag_dialog_add": "Agregar",
+  "tag_dialog_already_exists": "Esta etiqueta ya existe",
+  "tag_manage_title": "Gestionar Etiquetas",
+  "tag_manage_subtitle": "Arrastra para reordenar o elimina etiquetas",
+  "tag_manage_empty": "No tienes etiquetas activas",
+  "tag_delete_confirm_title": "¿Eliminar etiqueta?",
+  "tag_delete_confirm_message": "¿Deseas eliminar la etiqueta \"{tagName}\"?",
+  "@tag_delete_confirm_message": {
+    "placeholders": {
+      "tagName": {
+        "type": "String"
+      }
+    }
+  },
+  "tag_delete_btn": "Eliminar",
+  "tag_manage_tooltip": "Gestionar etiquetas",
+  "tag_reset_defaults": "Restablecer predeterminadas",
+  "tag_reset_confirm_title": "¿Restablecer etiquetas?",
+  "tag_reset_confirm_message": "¿Deseas restaurar la lista y orden original de etiquetas?",
+  "tag_restore_available": "Predeterminadas para restaurar:",
+  "settings_tags_title": "Etiquetas",
+  "settings_tags_subtitle": "Personalizar y ordenar etiquetas",
+
+  "sectionSecurity": "========== SEGURIDAD Y PRIVACIDAD ==========",
+  "settings_security_title": "Seguridad y Privacidad",
+  "settings_security_subtitle": "Bloqueo por PIN de 4 dígitos",
+  "security_dialog_title": "Seguridad",
+  "security_enable_lock": "Bloqueo de la aplicación",
+  "security_enable_lock_desc": "Solicitar PIN al abrir la app",
+  "security_biometrics": "Desbloqueo biométrico",
+  "security_biometrics_desc": "Usa huella digital o reconocimiento facial",
+  "security_change_pin": "Cambiar PIN",
+  "security_setup_pin_title": "Crear PIN de 4 dígitos",
+  "security_create_pin_desc": "Ingresa un PIN de 4 dígitos",
+  "security_confirm_pin_title": "Confirmar PIN",
+  "security_enter_current_pin": "Ingresa tu PIN actual",
+  "security_enter_new_pin": "Ingresa tu nuevo PIN de 4 dígitos",
+  "security_reenter_pin": "Vuelve a ingresar el PIN para confirmar",
+  "security_pin_mismatch": "Los PIN no coinciden. Intenta de nuevo.",
+  "security_pin_updated": "PIN configurado correctamente",
+  "security_unlock_title": "Diario Protegido",
+  "security_enter_pin": "Ingresa tu PIN para desbloquear",
+  "security_incorrect_pin": "PIN incorrecto",
+  "security_biometric_reason": "Desbloquea Cozy Feels para ver tu diario",
+  "security_biometrics_not_available": "Biometría no disponible en este dispositivo",
+
+  "sectionStats": "========== METRICAS Y ESTADISTICAS ==========",
+  "stats_title": "Estadísticas",
+  "stats_period_week": "Semana",
+  "stats_period_month": "Mes",
+  "stats_period_all": "Todo",
+  "stats_streak_title": "Racha de Registro",
+  "stats_streak_current": "Racha actual",
+  "stats_streak_record": "Mejor récord",
+  "stats_streak_days": "{count, plural, =1{1 día} other{{count} días}}",
+  "@stats_streak_days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stats_streak_motivational_zero": "¡Registra tu emoción de hoy para iniciar tu racha!",
+  "stats_streak_motivational_active": "¡Excelente constancia! Cada registro suma a tu bienestar.",
+  "stats_streak_motivational_great": "¡Impresionante racha! Eres muy constante con tu diario.",
+  "stats_total_entries": "Total de registros",
+  "stats_dominant_mood": "Emoción predominante",
+  "stats_mood_distribution": "Balance Emocional",
+  "stats_top_tags": "Etiquetas más frecuentes",
+  "stats_no_tags": "Sin etiquetas en este período",
+  "stats_empty_title": "Sin registros en este período",
+  "stats_empty_subtitle": "¡Registra cómo te sientes hoy para descubrir patrones en tu bienestar emocional!"
 }

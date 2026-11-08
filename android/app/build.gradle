@@ -40,8 +40,8 @@ android {
         applicationId = "com.nkl.cozy_feels_app"
         minSdk = flutter.minSdkVersion
         targetSdk = 36
-        versionCode = 7
-        versionName = "1.0.6"
+        versionCode = 8
+        versionName = "2.0.0"
 
         multiDexEnabled true
     }
@@ -60,6 +60,13 @@ android {
 
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.core:core:1.15.0'
+        force 'androidx.core:core-ktx:1.15.0'
+    }
 }
 
 flutter {
