@@ -7,6 +7,7 @@ import 'package:cozy_feels_app/features/history/domain/services/backup_service.d
 import 'package:cozy_feels_app/features/history/domain/services/google_drive_service.dart';
 import 'package:cozy_feels_app/features/history/domain/services/mood_storage_service.dart';
 import 'package:cozy_feels_app/features/history/presentation/screens/calendar_screen.dart';
+import 'package:cozy_feels_app/features/history/presentation/screens/stats_screen.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/backup_center_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/history_bottom_sheet.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/import_preview_dialog.dart';
@@ -436,6 +437,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 onOpenSettings: _showSettings,
                 onTimezoneTap: _showTimezoneDialog,
               ),
+
+              // Vista 3: Estadísticas
+              StatsScreen(
+                entries: _myHistory,
+                selectedTimezone: _selectedTimezone,
+                onOpenSettings: _showSettings,
+                onTimezoneTap: _showTimezoneDialog,
+              ),
             ],
           ),
           if (_showOnboarding) OnboardingOverlay(onFinish: _closeOnboarding),
@@ -488,6 +497,11 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(Icons.calendar_month_rounded),
               selectedIcon: const Icon(Icons.calendar_month_rounded),
               label: l10n.nav_calendar,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.auto_graph_rounded),
+              selectedIcon: const Icon(Icons.auto_graph_rounded),
+              label: l10n.nav_stats,
             ),
           ],
         ),

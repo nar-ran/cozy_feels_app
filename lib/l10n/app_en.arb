@@ -143,6 +143,7 @@
   "sectionNavigation": "========== NAVIGATION ==========",
   "nav_daily": "Daily",
   "nav_calendar": "Calendar",
+  "nav_stats": "Stats",
 
   "sectionCalendar": "========== CALENDAR ==========",
   "calendar_title": "Calendar",
@@ -228,5 +229,32 @@
   "security_enter_pin": "Enter your PIN to unlock",
   "security_incorrect_pin": "Incorrect PIN",
   "security_biometric_reason": "Unlock Cozy Feels to view your journal",
-  "security_biometrics_not_available": "Biometrics not available on this device"
+  "security_biometrics_not_available": "Biometrics not available on this device",
+
+  "sectionStats": "========== METRICS AND STATS ==========",
+  "stats_title": "Statistics",
+  "stats_period_week": "Week",
+  "stats_period_month": "Month",
+  "stats_period_all": "All Time",
+  "stats_streak_title": "Daily Streak",
+  "stats_streak_current": "Current streak",
+  "stats_streak_record": "Best streak",
+  "stats_streak_days": "{count, plural, =1{1 day} other{{count} days}}",
+  "@stats_streak_days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stats_streak_motivational_zero": "Log how you feel today to start your streak!",
+  "stats_streak_motivational_active": "Great consistency! Every entry counts towards your well-being.",
+  "stats_streak_motivational_great": "Amazing streak! You are very consistent with your journal.",
+  "stats_total_entries": "Total entries",
+  "stats_dominant_mood": "Dominant emotion",
+  "stats_mood_distribution": "Emotional Balance",
+  "stats_top_tags": "Top context tags",
+  "stats_no_tags": "No tags in this period",
+  "stats_empty_title": "No entries in this period",
+  "stats_empty_subtitle": "Log how you feel today to discover patterns in your emotional well-being!"
 }

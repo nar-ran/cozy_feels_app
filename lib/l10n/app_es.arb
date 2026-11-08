@@ -148,6 +148,7 @@
   "sectionNavigation": "========== NAVEGACIÓN ==========",
   "nav_daily": "Diario",
   "nav_calendar": "Calendario",
+  "nav_stats": "Estadísticas",
 
   "sectionCalendar": "========== CALENDARIO ==========",
   "calendar_title": "Calendario",
@@ -233,5 +234,32 @@
   "security_enter_pin": "Ingresa tu PIN para desbloquear",
   "security_incorrect_pin": "PIN incorrecto",
   "security_biometric_reason": "Desbloquea Cozy Feels para ver tu diario",
-  "security_biometrics_not_available": "Biometría no disponible en este dispositivo"
+  "security_biometrics_not_available": "Biometría no disponible en este dispositivo",
+
+  "sectionStats": "========== METRICAS Y ESTADISTICAS ==========",
+  "stats_title": "Estadísticas",
+  "stats_period_week": "Semana",
+  "stats_period_month": "Mes",
+  "stats_period_all": "Todo",
+  "stats_streak_title": "Racha de Registro",
+  "stats_streak_current": "Racha actual",
+  "stats_streak_record": "Mejor récord",
+  "stats_streak_days": "{count, plural, =1{1 día} other{{count} días}}",
+  "@stats_streak_days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stats_streak_motivational_zero": "¡Registra tu emoción de hoy para iniciar tu racha!",
+  "stats_streak_motivational_active": "¡Excelente constancia! Cada registro suma a tu bienestar.",
+  "stats_streak_motivational_great": "¡Impresionante racha! Eres muy constante con tu diario.",
+  "stats_total_entries": "Total de registros",
+  "stats_dominant_mood": "Emoción predominante",
+  "stats_mood_distribution": "Balance Emocional",
+  "stats_top_tags": "Etiquetas más frecuentes",
+  "stats_no_tags": "Sin etiquetas en este período",
+  "stats_empty_title": "Sin registros en este período",
+  "stats_empty_subtitle": "¡Registra cómo te sientes hoy para descubrir patrones en tu bienestar emocional!"
 }
