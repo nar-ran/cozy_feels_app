@@ -42,6 +42,34 @@
   "settings_export_subtitle": "Guarda tu historial en un archivo",
   "settings_import_title": "Importar Respaldo",
   "settings_import_subtitle": "Restaura tus sentimientos desde un archivo",
+  "settings_backup_center_title": "Copia de Seguridad",
+  "settings_backup_center_subtitle": "Google Drive, exportar e importar",
+  "backup_center_dialog_title": "Copia de Seguridad",
+  "backup_cloud_title": "Google Drive",
+  "backup_cloud_desc": "Guarda tus recuerdos de forma privada en tu cuenta personal de Google Drive.",
+  "backup_cloud_connect": "Conectar con Google",
+  "backup_cloud_disconnect": "Desconectar",
+  "backup_cloud_sync_now": "Sincronizar ahora",
+  "backup_cloud_restore": "Restaurar",
+  "backup_cloud_auto_sync": "Copia automática al abrir la app",
+  "backup_cloud_last_backup": "Última copia: {time}",
+  "@backup_cloud_last_backup": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "backup_cloud_no_backup": "Sin copias en la nube aún",
+  "backup_cloud_syncing": "Sincronizando con Google Drive...",
+  "backup_cloud_sync_success": "¡Copia de seguridad en la nube completada!",
+  "backup_cloud_restore_success": "¡Recuerdos restaurados desde la nube!",
+  "backup_cloud_no_remote_file": "No se encontró ningún archivo de respaldo en tu Google Drive.",
+  "backup_local_title": "Respaldos en Archivo",
+  "backup_local_export": "Exportar archivo JSON",
+  "backup_local_export_subtitle": "Guarda o comparte tu historial",
+  "backup_local_import": "Importar archivo JSON",
+  "backup_local_import_subtitle": "Restaura recuerdos desde un archivo local",
   "settings_language": "Idioma",
   "settings_current_language_label": "Español",
   "settings_import_success": "¡Recuerdos importados con éxito!",

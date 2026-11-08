@@ -69,4 +69,30 @@ class MoodStorageService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_themeKey);
   }
+
+  // --- CLOUD BACKUP ---
+  static const String _autoCloudBackupKey = 'auto_cloud_backup_enabled';
+  static const String _lastCloudBackupTimeKey = 'last_cloud_backup_time';
+
+  Future<bool> isAutoCloudBackupEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_autoCloudBackupKey) ?? false;
+  }
+
+  Future<void> setAutoCloudBackupEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_autoCloudBackupKey, enabled);
+  }
+
+  Future<DateTime?> getLastCloudBackupTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final timeStr = prefs.getString(_lastCloudBackupTimeKey);
+    if (timeStr == null) return null;
+    return DateTime.tryParse(timeStr);
+  }
+
+  Future<void> setLastCloudBackupTime(DateTime time) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastCloudBackupTimeKey, time.toIso8601String());
+  }
 }

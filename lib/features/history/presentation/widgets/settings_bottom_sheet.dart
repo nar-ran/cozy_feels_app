@@ -10,11 +10,12 @@ import 'package:cozy_feels_app/main.dart';
 import 'package:cozy_feels_app/l10n/app_localizations.dart';
 
 class SettingsBottomSheet extends StatelessWidget {
-  final VoidCallback onExport;
-  final VoidCallback onImport;
+  final VoidCallback onOpenBackupCenter;
 
-  const SettingsBottomSheet(
-      {super.key, required this.onExport, required this.onImport});
+  const SettingsBottomSheet({
+    super.key,
+    required this.onOpenBackupCenter,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -105,18 +106,12 @@ class SettingsBottomSheet extends StatelessWidget {
 
               _buildOption(
                 icon: AppAssets.featureIcons['Upload']!,
-                title: l10n.settings_export_title,
-                subtitle: l10n.settings_export_subtitle,
-                onTap: onExport,
-              ),
-
-              const SizedBox(height: 8),
-
-              _buildOption(
-                icon: AppAssets.featureIcons['Restore']!,
-                title: l10n.settings_import_title,
-                subtitle: l10n.settings_import_subtitle,
-                onTap: onImport,
+                title: l10n.settings_backup_center_title,
+                subtitle: l10n.settings_backup_center_subtitle,
+                onTap: () {
+                  Navigator.pop(context);
+                  onOpenBackupCenter();
+                },
               ),
 
               const SizedBox(height: 16),

@@ -42,6 +42,34 @@
   "settings_export_subtitle": "Save your history to a file",
   "settings_import_title": "Import Backup",
   "settings_import_subtitle": "Restore your feelings from a file",
+  "settings_backup_center_title": "Backup & Data",
+  "settings_backup_center_subtitle": "Google Drive, export and import",
+  "backup_center_dialog_title": "Backup & Data",
+  "backup_cloud_title": "Google Drive",
+  "backup_cloud_desc": "Privately back up your memories in your personal Google Drive.",
+  "backup_cloud_connect": "Connect with Google",
+  "backup_cloud_disconnect": "Disconnect",
+  "backup_cloud_sync_now": "Sync Now",
+  "backup_cloud_restore": "Restore",
+  "backup_cloud_auto_sync": "Auto-backup when opening app",
+  "backup_cloud_last_backup": "Last backup: {time}",
+  "@backup_cloud_last_backup": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "backup_cloud_no_backup": "No cloud backup yet",
+  "backup_cloud_syncing": "Syncing with Google Drive...",
+  "backup_cloud_sync_success": "Cloud backup completed successfully!",
+  "backup_cloud_restore_success": "Memories restored from cloud!",
+  "backup_cloud_no_remote_file": "No backup file found in your Google Drive.",
+  "backup_local_title": "File Backups",
+  "backup_local_export": "Export JSON file",
+  "backup_local_export_subtitle": "Save or share your history",
+  "backup_local_import": "Import JSON file",
+  "backup_local_import_subtitle": "Restore memories from a local file",
   "settings_language": "Language",
   "settings_current_language_label": "English",
   "settings_import_success": "Memories imported successfully!",

@@ -4,8 +4,10 @@ import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
 import 'package:cozy_feels_app/l10n/app_localizations.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
 import 'package:cozy_feels_app/features/history/domain/services/backup_service.dart';
+import 'package:cozy_feels_app/features/history/domain/services/google_drive_service.dart';
 import 'package:cozy_feels_app/features/history/domain/services/mood_storage_service.dart';
 import 'package:cozy_feels_app/features/history/presentation/screens/calendar_screen.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/backup_center_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/history_bottom_sheet.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/import_preview_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/mood_editor_dialog.dart';
@@ -61,6 +63,24 @@ class _HomeScreenState extends State<HomeScreen> {
       if (timezone != null) _selectedTimezone = timezone;
       _showOnboarding = !seenOnboarding;
     });
+
+    _checkAutoCloudSync();
+  }
+
+  Future<void> _checkAutoCloudSync() async {
+    final autoSync = await _storage.isAutoCloudBackupEnabled();
+    if (autoSync && _myHistory.isNotEmpty) {
+      final account = await GoogleDriveService.instance.signInSilently();
+      if (account != null) {
+        try {
+          final time =
+              await GoogleDriveService.instance.uploadBackup(_myHistory);
+          await _storage.setLastCloudBackupTime(time);
+        } catch (_) {
+          // Silent in background
+        }
+      }
+    }
   }
 
   Future<void> _saveHistory() async {
@@ -157,65 +177,96 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showSettings(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
+  void _showSettings() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => SettingsBottomSheet(
+      builder: (sheetContext) => SettingsBottomSheet(
+        onOpenBackupCenter: _openBackupCenter,
+      ),
+    );
+  }
+
+  void _openBackupCenter() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => BackupCenterDialog(
+        currentHistory: _myHistory,
         onExport: () async {
           final history = await _storage.loadHistory();
           await BackupService.exportBackup(history);
         },
-        onImport: () async {
-          try {
-            final importedData = await BackupService.importBackup();
-            if (importedData == null || importedData.isEmpty) {
-              return;
-            }
-
-            if (!context.mounted) return;
-
-            final List<HistoryEntry>? entriesToAdd =
-                await showDialog<List<HistoryEntry>>(
-              context: context,
-              barrierDismissible: true,
-              builder: (dialogContext) => ImportPreviewDialog(
-                importedEntries: importedData,
-                currentEntries: _myHistory,
-              ),
-            );
-
-            if (entriesToAdd != null && entriesToAdd.isNotEmpty) {
-              setState(() {
-                _myHistory.addAll(entriesToAdd);
-                _myHistory.sort((a, b) => b.date.compareTo(a.date));
-              });
-
-              await _storage.saveHistory(_myHistory);
-
-              if (!context.mounted) return;
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(l10n.settings_import_success),
-                  backgroundColor: AppColors.rosaFuerte,
-                ),
-              );
-            }
-          } catch (e) {
-            if (!context.mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text("Error: $e"),
-                  backgroundColor: const Color.fromARGB(255, 223, 112, 104)),
-            );
-          }
-        },
+        onImport: _handleImportFromFile,
+        onRestoreFromCloud: (downloadedEntries) =>
+            _handleRestoreFromEntries(downloadedEntries, isCloud: true),
       ),
     );
+  }
+
+  Future<void> _handleImportFromFile() async {
+    try {
+      final importedData = await BackupService.importBackup();
+      if (importedData == null || importedData.isEmpty) {
+        return;
+      }
+      if (!mounted) return;
+      await _handleRestoreFromEntries(importedData, isCloud: false);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+          backgroundColor: const Color.fromARGB(255, 223, 112, 104),
+        ),
+      );
+    }
+  }
+
+  Future<void> _handleRestoreFromEntries(
+    List<HistoryEntry> importedData, {
+    required bool isCloud,
+  }) async {
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      final List<HistoryEntry>? entriesToAdd =
+          await showDialog<List<HistoryEntry>>(
+        context: context,
+        barrierDismissible: true,
+        builder: (dialogContext) => ImportPreviewDialog(
+          importedEntries: importedData,
+          currentEntries: _myHistory,
+        ),
+      );
+
+      if (entriesToAdd != null && entriesToAdd.isNotEmpty) {
+        setState(() {
+          _myHistory.addAll(entriesToAdd);
+          _myHistory.sort((a, b) => b.date.compareTo(a.date));
+        });
+
+        await _storage.saveHistory(_myHistory);
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(isCloud
+                ? l10n.backup_cloud_restore_success
+                : l10n.settings_import_success),
+            backgroundColor: AppColors.rosaFuerte,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+          backgroundColor: const Color.fromARGB(255, 223, 112, 104),
+        ),
+      );
+    }
   }
 
   @override
@@ -264,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               GestureDetector(
-                                onTap: () => _showSettings(context),
+                                onTap: _showSettings,
                                 child: SvgPicture.asset(
                                   AppAssets.featureIcons['Settings']!,
                                   width: 28,
@@ -365,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 entries: _myHistory,
                 selectedTimezone: _selectedTimezone,
                 onEdit: (index, entry) => _showEditDialog(index, entry),
-                onOpenSettings: () => _showSettings(context),
+                onOpenSettings: _showSettings,
                 onTimezoneTap: _showTimezoneDialog,
               ),
             ],

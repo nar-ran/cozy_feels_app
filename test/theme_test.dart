@@ -11,10 +11,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  test('AppPalettes contains 5 distinct cozy palettes', () {
-    expect(AppPalettes.all.length, 5);
+  test('AppPalettes contains 6 distinct cozy palettes', () {
+    expect(AppPalettes.all.length, 6);
     expect(AppPalettes.all.containsKey(AppThemeId.cozyClassic), isTrue);
     expect(AppPalettes.all.containsKey(AppThemeId.nocheCalida), isTrue);
+    expect(AppPalettes.all.containsKey(AppThemeId.cafeMedianoche), isTrue);
     expect(AppPalettes.all.containsKey(AppThemeId.matchaZen), isTrue);
     expect(AppPalettes.all.containsKey(AppThemeId.tonosTierra), isTrue);
     expect(AppPalettes.all.containsKey(AppThemeId.nieblaLavanda), isTrue);
