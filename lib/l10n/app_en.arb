@@ -28,6 +28,26 @@
   "history_empty_state": "No entries yet...",
   "history_no_words": "No words today...",
   "history_delete_confirm": "Delete this memory?",
+  "history_search_hint": "Search notes and memories...",
+  "history_filter_all": "All",
+  "history_filter_this_week": "This week",
+  "history_filter_this_month": "This month",
+  "history_filter_custom_date": "Date range",
+  "history_filter_clear": "Clear filters",
+  "history_filter_results_count": "{filtered} of {total} memories",
+  "@history_filter_results_count": {
+    "placeholders": {
+      "filtered": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "history_filter_no_results": "No memories found with these filters",
+  "history_filter_select_mood": "Mood",
+  "history_filter_select_tag": "Tag",
 
   "notificationsSettings": "========== NOTIFICATIONS ==========",
   "notifications_title": "Notifications",
