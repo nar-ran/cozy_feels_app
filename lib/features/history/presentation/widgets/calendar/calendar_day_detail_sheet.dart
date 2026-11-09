@@ -79,19 +79,25 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
       formattedDate = formattedDate[0].toUpperCase() + formattedDate.substring(1);
     }
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(25, 12, 25, 25),
-      decoration: BoxDecoration(
-        color: AppColors.naranjaPiel,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(25, 12, 25, 25),
+        decoration: BoxDecoration(
+          color: AppColors.naranjaPiel,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
             // Handle bar (matching HistoryBottomSheet width 100)
             Container(
               width: 100,
@@ -168,6 +174,7 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
               // Cozy Edit Button matching app aesthetics (opens dialog on top without closing sheet)
               if (widget.onSaveEditedEntry != null)
                 GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: _openEditDialog,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 6),
@@ -220,6 +227,8 @@ class _CalendarDayDetailSheetState extends State<CalendarDayDetailSheet> {
           ],
         ),
       ),
+    ),
+    ),
     );
   }
 }

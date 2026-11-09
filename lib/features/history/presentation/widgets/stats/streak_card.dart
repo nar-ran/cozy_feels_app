@@ -38,10 +38,14 @@ class StreakCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
             children: [
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
@@ -52,10 +56,10 @@ class StreakCard extends StatelessWidget {
                     child: Icon(
                       Icons.local_fire_department_rounded,
                       color: AppColors.rosaFuerte,
-                      size: 26,
+                      size: 24,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 8),
                   Text(
                     l10n.stats_streak_title,
                     style: TextStyle(

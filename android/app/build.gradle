@@ -40,7 +40,7 @@ android {
         applicationId = "com.nkl.cozy_feels_app"
         minSdk = flutter.minSdkVersion
         targetSdk = 36
-        versionCode = 8
+        versionCode = 9
         versionName = "2.0.0"
 
         multiDexEnabled true
@@ -50,8 +50,9 @@ android {
         release {
             signingConfig signingConfigs.release 
             
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             // signingConfig = signingConfigs.debug
         }
