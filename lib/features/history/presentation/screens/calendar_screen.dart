@@ -15,7 +15,7 @@ import 'package:cozy_feels_app/l10n/app_localizations.dart';
 class CalendarScreen extends StatefulWidget {
   final List<HistoryEntry> entries;
   final String selectedTimezone;
-  final Function(int index, HistoryEntry entry) onEdit;
+  final Function(int index, HistoryEntry updatedEntry) onSaveEntry;
   final VoidCallback onOpenSettings;
   final VoidCallback onTimezoneTap;
 
@@ -23,7 +23,7 @@ class CalendarScreen extends StatefulWidget {
     super.key,
     required this.entries,
     required this.selectedTimezone,
-    required this.onEdit,
+    required this.onSaveEntry,
     required this.onOpenSettings,
     required this.onTimezoneTap,
   });
@@ -88,8 +88,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       return;
     }
 
-    final entryIndex = widget.entries.indexOf(entry);
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -100,12 +98,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
         date: date,
         entry: entry,
         emojis: AppAssets.sentimentEmojis.entries.toList(),
-        onSaveEditedEntry: entryIndex != -1
-            ? (updatedEntry) {
-                widget.onEdit(entryIndex, updatedEntry);
-                setState(() {});
-              }
-            : null,
+        onSaveEditedEntry: (updatedEntry) {
+          final index = widget.entries.indexWhere((e) =>
+              e.date.year == updatedEntry.date.year &&
+              e.date.month == updatedEntry.date.month &&
+              e.date.day == updatedEntry.date.day);
+          if (index != -1) {
+            widget.onSaveEntry(index, updatedEntry);
+            setState(() {});
+          }
+        },
       ),
     );
   }

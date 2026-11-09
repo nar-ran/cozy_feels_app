@@ -164,14 +164,32 @@ class _MoodEditorDialogState extends State<MoodEditorDialog> {
               const SizedBox(height: 20),
 
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => widget.onSave(
                     _controller.text, _selectedEmoji, _selectedTags),
-                child: Text(
-                  l10n.editor_save_button,
-                  style: TextStyle(
-                    fontSize: width * 0.07,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  decoration: BoxDecoration(
                     color: AppColors.rosaFuerte,
-                    fontWeight: FontWeight.bold,
+                    borderRadius: BorderRadius.circular(22),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.rosaFuerte.withValues(alpha: 0.25),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    l10n.editor_save_button,
+                    style: const TextStyle(
+                      fontFamily: 'Dongle',
+                      fontSize: 30,
+                      height: 1.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
