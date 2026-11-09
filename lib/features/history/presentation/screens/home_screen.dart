@@ -433,7 +433,12 @@ class _HomeScreenState extends State<HomeScreen> {
               CalendarScreen(
                 entries: _myHistory,
                 selectedTimezone: _selectedTimezone,
-                onEdit: (index, entry) => _showEditDialog(index, entry),
+                onSaveEntry: (index, updatedEntry) {
+                  setState(() {
+                    _myHistory[index] = updatedEntry;
+                  });
+                  _saveHistory();
+                },
                 onOpenSettings: _showSettings,
                 onTimezoneTap: _showTimezoneDialog,
               ),
