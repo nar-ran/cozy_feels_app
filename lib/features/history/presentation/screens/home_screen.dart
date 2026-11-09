@@ -4,7 +4,11 @@ import 'package:cozy_feels_app/core/widgets/stroke_text.dart';
 import 'package:cozy_feels_app/l10n/app_localizations.dart';
 import 'package:cozy_feels_app/features/history/domain/entities/history_entry.dart';
 import 'package:cozy_feels_app/features/history/domain/services/backup_service.dart';
+import 'package:cozy_feels_app/features/history/domain/services/google_drive_service.dart';
 import 'package:cozy_feels_app/features/history/domain/services/mood_storage_service.dart';
+import 'package:cozy_feels_app/features/history/presentation/screens/calendar_screen.dart';
+import 'package:cozy_feels_app/features/history/presentation/screens/stats_screen.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/backup_center_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/history_bottom_sheet.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/import_preview_dialog.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/mood_editor_dialog.dart';
@@ -12,10 +16,11 @@ import 'package:cozy_feels_app/features/history/presentation/widgets/mood_select
 import 'package:cozy_feels_app/features/history/presentation/widgets/onboarding_overlay.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/settings_bottom_sheet.dart';
 import 'package:cozy_feels_app/features/history/presentation/widgets/timezone_selector_dialog.dart';
+import 'package:cozy_feels_app/features/history/presentation/widgets/tags/tag_selector_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
@@ -30,15 +35,25 @@ class _HomeScreenState extends State<HomeScreen> {
   final MoodStorageService _storage = MoodStorageService();
 
   final TextEditingController _textController = TextEditingController();
+  final PageController _pageController = PageController();
+  int _currentTabIndex = 0;
   final List<HistoryEntry> _myHistory = [];
   final emojis = AppAssets.sentimentEmojis.entries.toList();
   String _selectedTimezone = 'America/New_York';
+  List<String> _selectedTags = [];
 
   @override
   void initState() {
     super.initState();
     tz.initializeTimeZones();
     _initData();
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    _pageController.dispose();
+    super.dispose();
   }
 
   Future<void> _initData() async {
@@ -51,6 +66,24 @@ class _HomeScreenState extends State<HomeScreen> {
       if (timezone != null) _selectedTimezone = timezone;
       _showOnboarding = !seenOnboarding;
     });
+
+    _checkAutoCloudSync();
+  }
+
+  Future<void> _checkAutoCloudSync() async {
+    final autoSync = await _storage.isAutoCloudBackupEnabled();
+    if (autoSync && _myHistory.isNotEmpty) {
+      final account = await GoogleDriveService.instance.signInSilently();
+      if (account != null) {
+        try {
+          final time =
+              await GoogleDriveService.instance.uploadBackup(_myHistory);
+          await _storage.setLastCloudBackupTime(time);
+        } catch (_) {
+          // Silent in background
+        }
+      }
+    }
   }
 
   Future<void> _saveHistory() async {
@@ -66,12 +99,14 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _showOnboarding = false);
   }
 
-  void _updateHistoryEntry(int index, String newMessage, String newEmoji) {
+  void _updateHistoryEntry(
+      int index, String newMessage, String newEmoji, List<String> newTags) {
     setState(() {
       _myHistory[index] = HistoryEntry(
         date: _myHistory[index].date,
         message: newMessage,
         emojiPath: newEmoji,
+        tags: newTags,
       );
     });
     _saveHistory();
@@ -109,8 +144,10 @@ class _HomeScreenState extends State<HomeScreen> {
             date: now,
             message: _textController.text,
             emojiPath: selectedEmojiPath,
+            tags: List<String>.from(_selectedTags),
           ));
       _textController.clear();
+      _selectedTags.clear();
     });
     _saveHistory();
     FocusScope.of(context).unfocus();
@@ -124,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onSelect: (newTz) {
           setState(() => _selectedTimezone = newTz);
           _saveTimezone(newTz);
+          tz.setLocalLocation(tz.getLocation(newTz));
           Navigator.pop(context);
         },
       ),
@@ -137,73 +175,106 @@ class _HomeScreenState extends State<HomeScreen> {
         date: entry.date,
         initialMessage: entry.message,
         initialEmoji: entry.emojiPath,
+        initialTags: entry.tags,
         emojis: emojis,
-        onSave: (msg, emoji) {
-          _updateHistoryEntry(index, msg, emoji);
+        onSave: (msg, emoji, tags) {
+          _updateHistoryEntry(index, msg, emoji, tags);
           Navigator.pop(context);
         },
       ),
     );
   }
 
-  void _showSettings(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
+  void _showSettings() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => SettingsBottomSheet(
+      builder: (sheetContext) => SettingsBottomSheet(
+        onOpenBackupCenter: _openBackupCenter,
+      ),
+    );
+  }
+
+  void _openBackupCenter() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => BackupCenterDialog(
+        currentHistory: _myHistory,
         onExport: () async {
           final history = await _storage.loadHistory();
           await BackupService.exportBackup(history);
         },
-        onImport: () async {
-          try {
-            final importedData = await BackupService.importBackup();
-            if (importedData == null || importedData.isEmpty) {
-              return;
-            }
-
-            if (!context.mounted) return;
-
-            final List<HistoryEntry>? entriesToAdd =
-                await showDialog<List<HistoryEntry>>(
-              context: context,
-              barrierDismissible: true,
-              builder: (dialogContext) => ImportPreviewDialog(
-                importedEntries: importedData,
-                currentEntries: _myHistory,
-              ),
-            );
-
-            if (entriesToAdd != null && entriesToAdd.isNotEmpty) {
-              setState(() {
-                _myHistory.addAll(entriesToAdd);
-                _myHistory.sort((a, b) => b.date.compareTo(a.date));
-              });
-
-              await _storage.saveHistory(_myHistory);
-
-              if (!context.mounted) return;
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(l10n.settings_import_success),
-                  backgroundColor: AppColors.rosaFuerte,
-                ),
-              );
-            }
-          } catch (e) {
-            if (!context.mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text("Error: $e"),
-                  backgroundColor: const Color.fromARGB(255, 223, 112, 104)),
-            );
-          }
-        },
+        onImport: _handleImportFromFile,
+        onRestoreFromCloud: (downloadedEntries) =>
+            _handleRestoreFromEntries(downloadedEntries, isCloud: true),
       ),
     );
+  }
+
+  Future<void> _handleImportFromFile() async {
+    try {
+      final importedData = await BackupService.importBackup();
+      if (importedData == null || importedData.isEmpty) {
+        return;
+      }
+      if (!mounted) return;
+      await _handleRestoreFromEntries(importedData, isCloud: false);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+          backgroundColor: const Color.fromARGB(255, 223, 112, 104),
+        ),
+      );
+    }
+  }
+
+  Future<void> _handleRestoreFromEntries(
+    List<HistoryEntry> importedData, {
+    required bool isCloud,
+  }) async {
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      final List<HistoryEntry>? entriesToAdd =
+          await showDialog<List<HistoryEntry>>(
+        context: context,
+        barrierDismissible: true,
+        builder: (dialogContext) => ImportPreviewDialog(
+          importedEntries: importedData,
+          currentEntries: _myHistory,
+        ),
+      );
+
+      if (entriesToAdd != null && entriesToAdd.isNotEmpty) {
+        setState(() {
+          _myHistory.addAll(entriesToAdd);
+          _myHistory.sort((a, b) => b.date.compareTo(a.date));
+        });
+
+        await _storage.saveHistory(_myHistory);
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(isCloud
+                ? l10n.backup_cloud_restore_success
+                : l10n.settings_import_success),
+            backgroundColor: AppColors.rosaFuerte,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+          backgroundColor: const Color.fromARGB(255, 223, 112, 104),
+        ),
+      );
+    }
   }
 
   @override
@@ -234,110 +305,206 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColors.fondoSoft,
       body: Stack(
         children: [
-          SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () => _showSettings(context),
-                        child: SvgPicture.asset(
-                          AppAssets.featureIcons['Settings']!,
-                          width: 28,
-                          colorFilter: const ColorFilter.mode(
-                              AppColors.textoOscuro, BlendMode.srcIn),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: _showTimezoneDialog,
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: Text(
-                            formattedDate,
-                            style: TextStyle(
-                              color: AppColors.rosaFuerte,
-                              fontSize: width * 0.08,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35.0),
+          PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() => _currentTabIndex = index);
+            },
+            children: [
+              // Vista 1: Registro Diario e Historial
+              Stack(
+                children: [
+                  SafeArea(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 40),
-                        Text(
-                            l10n.home_title,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: width * 0.15,
-                                color: AppColors.textoOscuro,
-                                height: 0.8)),
-                        const SizedBox(height: 30),
-                        TextField(
-                          controller: _textController,
-                          style: const TextStyle(
-                            color: AppColors.textoOscuro,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: l10n.home_hint_text,
-                            hintStyle: TextStyle(
-                              color: AppColors.rosaFuerte.withOpacity(0.8),
-                            ),
-                            filled: true,
-                            fillColor: AppColors.naranjaPiel,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50),
-                                borderSide: const BorderSide(
-                                    color: AppColors.rosaFuerte, width: 2)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50),
-                                borderSide: const BorderSide(
-                                    color: AppColors.rosaFuerte, width: 2)),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50),
-                              borderSide: BorderSide(
-                                  color: AppColors.rosaFuerte.withOpacity(0.5),
-                                  width: 2),
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: _showSettings,
+                                child: SvgPicture.asset(
+                                  AppAssets.featureIcons['Settings']!,
+                                  width: 28,
+                                  colorFilter: ColorFilter.mode(
+                                      AppColors.textoOscuro, BlendMode.srcIn),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: _showTimezoneDialog,
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: Text(
+                                    formattedDate,
+                                    style: TextStyle(
+                                      color: AppColors.rosaFuerte,
+                                      fontSize: width * 0.08,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 30),
-                        StrokeText(
-                            text: l10n.home_no_words_question,
-                            fontSize: width * 0.12,
-                            color: AppColors.rosaFuerte,
-                            strokeColor: AppColors.textoOscuro),
                         Expanded(
-                          child: MoodSelectorGrid(
-                            emojis: emojis,
-                            onEmojiSelected: _saveMood,
+                          child: SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(height: 20),
+                                  Text(
+                                      l10n.home_title,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: width * 0.15,
+                                          color: AppColors.textoOscuro,
+                                          height: 0.8)),
+                                  const SizedBox(height: 22),
+                                  TextField(
+                                    controller: _textController,
+                                    style: TextStyle(
+                                      color: AppColors.textoOscuro,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    decoration: InputDecoration(
+                                      hintText: l10n.home_hint_text,
+                                      hintStyle: TextStyle(
+                                        color: AppColors.rosaFuerte.withValues(alpha: 0.8),
+                                      ),
+                                      filled: true,
+                                      fillColor: AppColors.naranjaPiel,
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50),
+                                          borderSide: BorderSide(
+                                              color: AppColors.rosaFuerte, width: 2)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50),
+                                          borderSide: BorderSide(
+                                              color: AppColors.rosaFuerte, width: 2)),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                        borderSide: BorderSide(
+                                            color: AppColors.rosaFuerte.withValues(alpha: 0.5),
+                                            width: 2),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 14),
+                                  TagSelectorRow(
+                                    selectedTags: _selectedTags,
+                                    onTagsChanged: (tags) {
+                                      setState(() => _selectedTags = tags);
+                                    },
+                                  ),
+                                  const SizedBox(height: 16),
+                                  StrokeText(
+                                      text: l10n.home_no_words_question,
+                                      fontSize: width * 0.12,
+                                      color: AppColors.rosaFuerte,
+                                      strokeColor: AppColors.strokeColor),
+                                  const SizedBox(height: 12),
+                                  MoodSelectorGrid(
+                                    emojis: emojis,
+                                    onEmojiSelected: _saveMood,
+                                  ),
+                                  const SizedBox(height: 140),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          HistoryBottomSheet(
-            entries: _myHistory,
-            selectedTimezone: _selectedTimezone,
-            onEdit: (index, entry) => _showEditDialog(index, entry),
+                  HistoryBottomSheet(
+                    entries: _myHistory,
+                    selectedTimezone: _selectedTimezone,
+                    onEdit: (index, entry) => _showEditDialog(index, entry),
+                  ),
+                ],
+              ),
+
+              // Vista 2: Calendario
+              CalendarScreen(
+                entries: _myHistory,
+                selectedTimezone: _selectedTimezone,
+                onEdit: (index, entry) => _showEditDialog(index, entry),
+                onOpenSettings: _showSettings,
+                onTimezoneTap: _showTimezoneDialog,
+              ),
+
+              // Vista 3: Estadísticas
+              StatsScreen(
+                entries: _myHistory,
+                selectedTimezone: _selectedTimezone,
+                onOpenSettings: _showSettings,
+                onTimezoneTap: _showTimezoneDialog,
+              ),
+            ],
           ),
           if (_showOnboarding) OnboardingOverlay(onFinish: _closeOnboarding),
         ],
+      ),
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          indicatorColor: AppColors.rosaFuerte.withValues(alpha: 0.35),
+          labelTextStyle: WidgetStateProperty.resolveWith((states) {
+            return TextStyle(
+              fontFamily: 'Dongle',
+              fontSize: 22,
+              fontWeight: states.contains(WidgetState.selected)
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+              color: AppColors.textoOscuro,
+              height: 0.9,
+            );
+          }),
+          iconTheme: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return IconThemeData(color: AppColors.textoOscuro, size: 26);
+            }
+            return IconThemeData(
+                color: AppColors.textoOscuro.withValues(alpha: 0.6), size: 24);
+          }),
+        ),
+        child: NavigationBar(
+          height: 65,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: AppColors.naranjaPiel,
+          selectedIndex: _currentTabIndex,
+          onDestinationSelected: (index) {
+            setState(() => _currentTabIndex = index);
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+          destinations: [
+            NavigationDestination(
+              icon: const Icon(Icons.edit_note_rounded),
+              selectedIcon: const Icon(Icons.edit_note_rounded),
+              label: l10n.nav_daily,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.calendar_month_rounded),
+              selectedIcon: const Icon(Icons.calendar_month_rounded),
+              label: l10n.nav_calendar,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.auto_graph_rounded),
+              selectedIcon: const Icon(Icons.auto_graph_rounded),
+              label: l10n.nav_stats,
+            ),
+          ],
+        ),
       ),
     );
   }

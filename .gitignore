@@ -19,6 +19,8 @@ local.properties
 *.aab
 *.jks
 *.keystore
+key/
+client_secret*.json
 
 # Archivos de iOS
 .mtl
@@ -51,3 +53,6 @@ Thumbs.db
 
 # Otros ambientes
 windows/
+
+# Capturas de pantalla de pruebas
+flutter_*.png

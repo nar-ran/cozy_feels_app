@@ -23,7 +23,7 @@ class TimelineTile extends StatelessWidget {
         children: [
           Column(
             children: [
-              const Icon(Icons.sentiment_satisfied, color: AppColors.textoOscuro, size: 30),
+              Icon(Icons.sentiment_satisfied, color: AppColors.textoOscuro, size: 30),
               if (!isLast)
                 Expanded(
                   child: Container(
@@ -41,9 +41,9 @@ class TimelineTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(date, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textoOscuro)),
+                  Text(date, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textoOscuro)),
                   if (note != null)
-                    Text(note!, style: const TextStyle(fontSize: 18, color: AppColors.textoOscuro, height: 1.1)),
+                    Text(note!, style: TextStyle(fontSize: 18, color: AppColors.textoOscuro, height: 1.1)),
                 ],
               ),
             ),
